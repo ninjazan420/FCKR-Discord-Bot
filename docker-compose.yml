@@ -1,0 +1,7 @@
+services:
+  fckr:
+    build: .
+    environment:
+      DISCORD_API_TOKEN: "123" # Discord Bot-Token
+      DECISION_CHANNEL: "123" # Logging Channel ID
+      ADMIN_USER_ID: "123" # CAREFUL also able to use Admin commands
