@@ -8,6 +8,26 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
+            "1.0.3": {
+                "date": "07 June 2025",
+                "title": "🔧 Critical Bug Fixes & Enhancements",
+                "features": [
+                    "Enhanced bot startup message with ASCII art and admin mentions",
+                    "Added detailed system stats to startup console output",
+                    "Improved startup logging with comprehensive system information"
+                ],
+                "fixes": [
+                    "Fixed color role feedback messages not appearing (payload.channel_id bug)",
+                    "Fixed changelog command date format parsing issue",
+                    "Extended ephemeral message duration to match 7.5s cooldown",
+                    "Corrected reaction handler channel reference errors"
+                ],
+                "technical": [
+                    "Replaced undefined payload.channel_id with reaction.message.channel",
+                    "Updated date parsing format in changelog sorting",
+                    "Enhanced error handling in color role system"
+                ]
+            },
             "1.0.2": {
                 "date": "07 June 2025",
                 "title": "🎨 Color Role System Overhaul",
@@ -19,6 +39,10 @@ class ChangelogCog(commands.Cog):
                     "Added ASCII art to help command and README"
                 ],
                 "fixes": [
+                    "Fixed changelog command date format parsing issue",
+                    "Added proper feedback messages for color role changes via DM",
+                    "Implemented 7.5-second cooldown for color role changes",
+                    "Fixed toggle functionality for color roles (click again to remove)",
                     "Improved error handling and user feedback",
                     "Clean up environment variables by removing unused color message IDs",
                     "Enhanced role positioning verification system"
@@ -101,7 +125,7 @@ class ChangelogCog(commands.Cog):
             title=f"📋 Changelog - Version {version}",
             description=data["title"],
             color=0x00ff00,
-            timestamp=datetime.strptime(data["date"], "%Y-%m-%d")
+            timestamp=datetime.strptime(data["date"], "%d %B %Y")
         )
         
         # Features
@@ -145,7 +169,7 @@ class ChangelogCog(commands.Cog):
         # Sort versions by date (newest first)
         sorted_versions = sorted(
             self.changelog_data.items(),
-            key=lambda x: datetime.strptime(x[1]["date"], "%Y-%m-%d"),
+            key=lambda x: datetime.strptime(x[1]["date"], "%d %B %Y"),
             reverse=True
         )
         

@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import os
+import time
 from datetime import datetime
 
 class ColorRolesCog(commands.Cog):
@@ -11,6 +12,7 @@ class ColorRolesCog(commands.Cog):
         
         # Store message IDs dynamically (created at startup)
         self.color_message_ids = []
+        self.user_cooldowns = {}  # Store user cooldowns for color role changes
         
         # 30 gradient colors from red to purple
         self.color_palette = [
@@ -199,6 +201,29 @@ class ColorRolesCog(commands.Cog):
         """Handle color role reactions across multiple messages"""
         if user.bot:
             return
+        
+        # Check cooldown (7.5 seconds)
+        current_time = time.time()
+        if user.id in self.user_cooldowns:
+            time_since_last = current_time - self.user_cooldowns[user.id]
+            if time_since_last < 7.5:
+                remaining = 7.5 - time_since_last
+                try:
+                    channel = reaction.message.channel
+                    if channel:
+                        cooldown_embed = discord.Embed(
+                            title="⏰ Cooldown aktiv",
+                            description=f"You got to wait **{remaining:.1f} seconds** to be able to change your color again.",
+                            color=0xffa500
+                        )
+                        cooldown_embed.set_footer(text="Bitte warte einen Moment! ⏳")
+                        await channel.send(f"<@{user.id}>", embed=cooldown_embed, delete_after=3)
+                except:
+                    pass
+                return
+        
+        # Set cooldown for user
+        self.user_cooldowns[user.id] = current_time
             
         # Check if it's in the roles channel and one of our messages
         if (reaction.message.channel.id != self.roles_channel_id or 
@@ -259,21 +284,24 @@ class ColorRolesCog(commands.Cog):
             if user_has_role:
                 # Remove the role (toggle off)
                 await member.remove_roles(desired_role, reason="Color role toggle off")
-                print(f"🎨 {member.name} removed color role {desired_role_name}")
+                print(f"🎨 {user.name} removed color role {desired_role_name}")
                 
                 # Send ephemeral confirmation message
                 try:
-                    confirm_embed = discord.Embed(
-                        title="🎨 Farbrolle entfernt!",
-                        description=f"Deine Farbrolle **{desired_role_name}** wurde erfolgreich entfernt! 💫",
-                        color=0x808080  # Gray color for removal
-                    )
-                    confirm_embed.set_footer(text="Du kannst jederzeit eine neue Farbe wählen! ✨")
-                    
-                    # Send ephemeral message that only the user can see
-                    await payload.member.send(embed=confirm_embed, delete_after=10)
+                    # Get the channel from the reaction
+                    channel = reaction.message.channel
+                    if channel:
+                        confirm_embed = discord.Embed(
+                            title="🎨 Farbrolle entfernt!",
+                            description=f"Deine Farbrolle **{desired_role_name}** wurde erfolgreich entfernt! 💫",
+                            color=0x808080  # Gray color for removal
+                        )
+                        confirm_embed.set_footer(text="Du kannst jederzeit eine neue Farbe wählen! ✨")
+                        
+                        # Send ephemeral message in channel
+                        await channel.send(f"<@{user.id}>", embed=confirm_embed, delete_after=7.5)
                 except Exception as e:
-                    print(f"⚠️ Error sending removal confirmation to {user}: {e}")
+                    print(f"⚠️ Error sending removal confirmation to {user.name}: {e}")
             else:
                 # Remove all existing color roles from user first
                 removed_roles = []
@@ -284,40 +312,45 @@ class ColorRolesCog(commands.Cog):
                 
                 # Add new color role
                 await member.add_roles(desired_role, reason="Color role selection")
-                print(f"🎨 {member.name} changed color to {desired_role_name}")
+                print(f"🎨 {user.name} changed color to {desired_role_name}")
                 
                 # Send ephemeral confirmation message
                 try:
-                    confirm_embed = discord.Embed(
-                        title="🎨 Farbrolle geändert!",
-                        description=f"Deine neue Farbe **{desired_role_name}** wurde erfolgreich zugewiesen! ✨",
-                        color=self.color_palette[color_index]
-                    )
-                    
-                    if removed_roles:
-                        confirm_embed.add_field(
-                            name="Vorherige Farbe entfernt",
-                            value=f"**{removed_roles[0]}**",
-                            inline=False
+                    # Get the channel from the reaction
+                    channel = reaction.message.channel
+                    if channel:
+                        confirm_embed = discord.Embed(
+                            title="🎨 Farbrolle geändert!",
+                            description=f"Deine neue Farbe **{desired_role_name}** wurde erfolgreich zugewiesen! ✨",
+                            color=self.color_palette[color_index]
                         )
-                    
-                    confirm_embed.set_footer(text="Klicke erneut auf die gleiche Reaktion, um die Farbe zu entfernen! 💫")
-                    
-                    # Send ephemeral message that only the user can see
-                    await payload.member.send(embed=confirm_embed, delete_after=10)
+                        
+                        if removed_roles:
+                            confirm_embed.add_field(
+                                name="Vorherige Farbe entfernt",
+                                value=f"**{removed_roles[0]}**",
+                                inline=False
+                            )
+                        
+                        confirm_embed.set_footer(text="Klicke erneut auf die gleiche Reaktion, um die Farbe zu entfernen! 💫")
+                        
+                        # Send ephemeral message in channel
+                        await channel.send(f"<@{user.id}>", embed=confirm_embed, delete_after=7.5)
                 except Exception as e:
-                    print(f"⚠️ Error sending confirmation to {user}: {e}")
+                    print(f"⚠️ Error sending confirmation to {user.name}: {e}")
                 
         except Exception as e:
-            print(f"❌ Error managing color roles for {user}: {e}")
+            print(f"❌ Error managing color roles for {user.name}: {e}")
             # Send ephemeral error message to user
             try:
-                error_embed = discord.Embed(
-                    title="❌ Fehler",
-                    description="Es gab ein Problem beim Verwalten deiner Farbrolle. Bitte versuche es erneut oder kontaktiere einen Admin.",
-                    color=0xff0000
-                )
-                await payload.member.send(embed=error_embed, delete_after=10)
+                channel = reaction.message.channel
+                if channel:
+                    error_embed = discord.Embed(
+                        title="❌ Fehler",
+                        description="Es gab ein Problem beim Verwalten deiner Farbrolle. Bitte versuche es erneut oder kontaktiere einen Admin.",
+                        color=0xff0000
+                    )
+                    await channel.send(f"<@{user.id}>", embed=error_embed, delete_after=7.5)
             except:
                 pass
     

@@ -38,10 +38,32 @@ async def setup_cogs():
 async def on_ready():
     # Startup logging with timestamp and version
     timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    version = "1.0.2"
+    version = "1.0.3"
+    
+    # ASCII Art for console
+    ascii_art = """
+▄████  ▄█▄    █  █▀ █▄▄▄▄ 
+█▀   ▀ █▀ ▀▄  █▄█   █  ▄▀ 
+█▀▀    █   ▀  █▀▄   █▀▀▌  
+█      █▄  ▄▀ █  █  █  █  
+ █     ▀███▀    █     █   
+  ▀            ▀     ▀    
+    """
+    
+    print(ascii_art)
     print(f'{timestamp} # 🟢 Bot gestartet - Version {version}')
     print(f'{bot.user} has connected to Discord!')
     print(f'Bot is ready and serving {len(bot.guilds)} guilds')
+    
+    # Get system info for startup
+    cpu_percent = psutil.cpu_percent(interval=1)
+    memory = psutil.virtual_memory()
+    memory_used = round(memory.used / 1024 / 1024 / 1024, 2)
+    memory_total = round(memory.total / 1024 / 1024 / 1024, 2)
+    
+    print(f'💻 System: {platform.system()} {platform.release()}')
+    print(f'🧠 CPU: {cpu_percent}% | RAM: {memory_used}GB/{memory_total}GB')
+    print(f'🐍 Python: {platform.python_version()}')
     
     # Set bot status
     await bot.change_presence(activity=discord.Game(name="Official FCKR Bot"))
@@ -60,16 +82,24 @@ async def on_ready():
     if bot_logging_channel_id:
         channel = bot.get_channel(bot_logging_channel_id)
         if channel:
+            # Get admin users (you can customize this list)
+            admin_mentions = "<@ninjazan420>"  # Add more admin IDs as needed
+            
             embed = discord.Embed(
-                title="🟢 Bot Started",
-                description=f"FCKR Bot v{version} is now online!",
+                title="🟢 FCKR Bot Started",
+                description=f"```\n▄████  ▄█▄    █  █▀ █▄▄▄▄ \n█▀   ▀ █▀ ▀▄  █▄█   █  ▄▀ \n█▀▀    █   ▀  █▀▄   █▀▀▌  \n█      █▄  ▄▀ █  █  █  █  \n █     ▀███▀    █     █   \n  ▀            ▀     ▀    \n```\n**FCKR Bot v{version} is now online!** 🚀",
                 color=0x00ff00,
                 timestamp=datetime.now()
             )
-            embed.add_field(name="Guilds", value=str(len(bot.guilds)), inline=True)
-            embed.add_field(name="Version", value=version, inline=True)
+            
+            embed.add_field(name="📊 Server Info", value=f"**Guilds:** {len(bot.guilds)}\n**Version:** {version}", inline=True)
+            embed.add_field(name="💻 System Stats", value=f"**OS:** {platform.system()} {platform.release()}\n**CPU:** {cpu_percent}%\n**RAM:** {memory_used}GB/{memory_total}GB", inline=True)
+            embed.add_field(name="🔧 Status", value="**Voice Stats:** ✅ Active\n**Color Roles:** ✅ Ready\n**Commands:** ✅ Loaded", inline=True)
+            
+            embed.set_footer(text="FCKR Community Bot | Made with ❤️ by ninjazan420")
+            
             try:
-                await channel.send(embed=embed)
+                await channel.send(f"hey {admin_mentions} 👋", embed=embed)
                 print("✅ Startup logged to bot logging channel")
             except Exception as e:
                 print(f"Error logging startup: {e}")
