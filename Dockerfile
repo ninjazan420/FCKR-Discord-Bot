@@ -1,20 +1,24 @@
-FROM gorialis/discord.py
+FROM python:3.11-slim
 
-# Install Pillow dependencies and Impact font
-RUN apt-get update && apt-get install -y \
-    python3-pil \
-    fonts-liberation \ 
-    && \
-    rm -rf /var/lib/apt/lists/*
-
-# Accept EULA for MS fonts
-RUN echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections
-
-COPY src/ /app
-# Erstelle den data Ordner statt ihn zu kopieren
-RUN mkdir -p /app/data
+# Set working directory
 WORKDIR /app
 
-RUN pip install -r requirements.txt
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
-CMD [ "python", "./main.py" ]
+# Copy requirements first for better caching
+COPY src/requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy source code
+COPY src/ .
+
+# Create data directory for any persistent files
+RUN mkdir -p /app/data
+
+# Run the bot
+CMD ["python", "main.py"]

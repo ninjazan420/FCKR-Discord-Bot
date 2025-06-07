@@ -1,26 +1,71 @@
-#
-#
-#
-#
-#src/data/fonts
-#src/data/clips*
-#src/data/imgs*
-#docker-compose.yml
-#docker-compose Kopie2.yml
-#docker-compose - Kopie.yml
-#docker-compose.yml
-#.cursor*
-#.github*
-#.vscode*
-#.gitignore*
-#done.txt
-#test_*
-#
-#
-# 
-#
-#
-#
-#
-#
-.vscode/settings.json
+# Environment files
+.env
+.env.local
+.env.production
+
+# Docker files (keep example)
+docker-compose.override.yml
+docker-compose.prod.yml
+
+# IDE and Editor files
+.vscode/
+.cursor/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Logs
+*.log
+logs/
+
+# Data directories
+src/data/
+data/
+
+# Test files
+test_*
+*_test.py
+tests/
+
+# Temporary files
+*.tmp
+*.temp
+done.txt
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.trae/rules/project_rules.md
+.trae/rules/notes.md

@@ -1,26 +1,25 @@
-# FCKR-Discord-Bot
+# FCKR-Discord-Bot 1.0.0
 
-A Discord bot to make the application process of private servers easier for admins.
+A modular Discord bot for the FCKR Tag & Community server that provides automated voice channel statistics, color role management, and community features.
 
 ## Features
 
-- Automatically sends application instructions to new members
-- Collects application information through a user-friendly form
-- **Supports Discord's native membership screening applications**
-- Posts applications to a dedicated admin channel with approve/reject/interview buttons
-- Logs all application activity in the decision channel
-- Notifies users of application decisions
-- Admin commands to manage moderator permissions
-- Automatic detection of pending applications
-- Detailed debugging and troubleshooting tools
+- **Automatic Voice Channel Statistics**: Real-time updates every 4 minutes showing total members, FCKR tag members, boost count, and daily joins
+- **Color Role System**: 30 gradient colors with reaction-based selection in dedicated channel
+- **System Monitoring**: Built-in system stats display (CPU, RAM, OS info)
+- **Changelog System**: Complete version history and update tracking
+- **Modular Architecture**: Clean cog-based structure for easy maintenance and expansion
+- **Docker Support**: Ready-to-deploy containerized setup
+- **Comprehensive Logging**: Startup logging with timestamps and bot activity tracking
 
 ## Setup
 
 1. Clone this repository
 2. Configure your environment variables in `docker-compose.yml`:
    - `DISCORD_API_TOKEN`: Your Discord bot token
-   - `DECISION_CHANNEL`: Channel ID where applications will be posted
-   - `ADMIN_USER_ID`: User ID of the admin who can manage applications
+   - `FCKR_SERVER`: Your Discord server ID
+   - `BOT_LOGGING`: Channel ID for bot logging
+   - `ROLES_CHANNEL_ID`: Channel ID for color role selection
 
 3. Build and run the bot using Docker:
 
@@ -28,40 +27,38 @@ A Discord bot to make the application process of private servers easier for admi
    docker-compose up -d
    ```
 
-## Usage
+## Commands
 
-When a new user joins your server, the bot will automatically send them a DM with application instructions. Admins can review applications in the designated decision channel and approve or reject them with a single click.
+### Core Commands
+- `!fckr help` - Display help information with system stats
+- `!fckr stats` - Show current server statistics
+- `!fckr colors` - Get color roles in the designated channel
+- `!fckr changelog [version]` - View bot version history
 
-### Commands
-
-#### Application Commands
-- `/apply` - Opens the application form (can be used if the automatic DM was missed)
-- `/pending` - Lists all pending applications (admin only)
-
-#### Basic Commands
-- `.fcping` - Checks if the bot is responsive
-- `.fcinfo` - Displays detailed information about the bot and server (admin/mod only)
-
-#### Moderation Commands
-- `.fcadd <user_id>` - Adds a user to the authorized moderators list (admin only)
-- `.fcrm <user_id>` - Removes a user from the authorized moderators list (admin only)
-- `.fclog` - Shows the last 10 application decisions with details (admin/mod only)
-
-#### Troubleshooting Commands
-- `.fcdebug` - Shows detailed debug information about the bot's state (admin/mod only)
-- `.fcrefresh` - Manually refreshes the pending applications list by checking server members (admin/mod only)
-- `.fcchannel [channel_id]` - Checks or updates the decision channel (admin only)
+### Admin Commands
+- `!fckr setup_colors` - Manually setup color role system (admin only)
 
 ## Development
 
-This bot is built using discord.py. To set up a development environment:
+This bot is built using discord.py with a modular cog-based architecture. To set up a development environment:
 
 1. Create a virtual environment: `python -m venv venv`
 2. Activate the virtual environment:
    - Windows: `venv\Scripts\activate`
    - Linux/Mac: `source venv/bin/activate`
 3. Install dependencies: `pip install -r requirements.txt`
-4. Run the bot: `python src/main.py`
+4. Create a `.env` file with your environment variables
+5. Run the bot: `python src/main.py`
+
+## Version History
+
+**Version 1.0.0** (Current)
+- Complete rewrite with modular architecture
+- Automatic voice channel statistics
+- Color role system with 30 gradient colors
+- Enhanced help command with system monitoring
+- Changelog system for version tracking
+- Startup logging and comprehensive error handling
 
 ## License
 
