@@ -16,8 +16,7 @@ class VoiceStatsCog(commands.Cog):
         # Voice channel IDs (will be created automatically)
         self.voice_channels = {
             'total_members': None,
-            'boost_count': None,
-            'today_joins': None
+            'boost_count': None
         }
         
         # Track if channels are already set up
@@ -38,8 +37,7 @@ class VoiceStatsCog(commands.Cog):
         # Find existing channels or create new ones
         channel_patterns = {
             'total_members': ['total members', 'members'],
-            'boost_count': ['boosts', 'boost'],
-            'today_joins': ['today joins', 'joins', 'daily joins']
+            'boost_count': ['boosts', 'boost']
         }
         
         for key, patterns in channel_patterns.items():
@@ -58,8 +56,7 @@ class VoiceStatsCog(commands.Cog):
                 # Create new channel
                 default_names = {
                     'total_members': '👥 Total Members: 0',
-                    'boost_count': '🚀 Boosts: 0',
-                    'today_joins': '📈 Today Joins: 0'
+                    'boost_count': '🚀 Boosts: 0'
                 }
                 try:
                     new_channel = await guild.create_voice_channel(
@@ -118,7 +115,6 @@ class VoiceStatsCog(commands.Cog):
         # Update channels
         await self.update_channel('total_members', f'👥 Total Members: {total_members}')
         await self.update_channel('boost_count', f'🚀 Boosts: {boost_count}')
-        await self.update_channel('today_joins', f'📈 Today Joins: {self.daily_joins}')
         
         # No automatic logging - only update voice channels silently
     
@@ -193,7 +189,6 @@ class VoiceStatsCog(commands.Cog):
         # Update channels
         await self.update_channel('total_members', f'👥 Total Members: {total_members}')
         await self.update_channel('boost_count', f'🚀 Boosts: {boost_count}')
-        await self.update_channel('today_joins', f'📈 Today Joins: {self.daily_joins}')
         
         # Send combined confirmation and log to bot logging channel
         embed = discord.Embed(

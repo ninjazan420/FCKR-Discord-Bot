@@ -1,4 +1,14 @@
-# FCKR-Discord-Bot 1.0.0
+# FCKR-Discord-Bot 1.0.2
+
+```
+▄████  ▄█▄    █  █▀ █▄▄▄▄ 
+█▀   ▀ █▀ ▀▄  █▄█   █  ▄▀ 
+█▀▀    █   ▀  █▀▄   █▀▀▌  
+█      █▄  ▄▀ █  █  █  █  
+ █     ▀███▀    █     █   
+  ▀            ▀     ▀    
+                           
+```
 
 A modular Discord bot for the FCKR Tag & Community server that provides automated voice channel statistics, color role management, and community features.
 
@@ -52,11 +62,27 @@ This bot is built using discord.py with a modular cog-based architecture. To set
 
 ## Version History
 
-**Version 1.0.0** (Current)
+**Version 1.0.2** (Current)
+- Overhauled color role system with toggle functionality
+- Implemented toggle functionality for color roles (click again to remove)
+- Positioned color roles above FCKR role for better visibility
+- Replaced static message IDs with dynamic message creation
+- Added detailed confirmation messages for role changes
+- Improved error handling and user feedback
+- Added ASCII art to help command and README
+- Clean up environment variables by removing unused color message IDs
+
+**Version 1.0.1**
+- Removed 'Today Joins' voice channel from automatic creation
+- Changed admin command from `!fckr stats` to `!fckr neofetch`
+- Added detailed system statistics command
+- Fixed command conflicts and updated help
+
+**Version 1.0.0**
 - Complete rewrite with modular architecture
 - Automatic voice channel statistics
 - Color role system with 30 gradient colors
-- Enhanced help command with system monitoring
+- System monitoring and logging
 - Changelog system for version tracking
 - Startup logging and comprehensive error handling
 

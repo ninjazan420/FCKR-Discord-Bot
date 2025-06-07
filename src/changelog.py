@@ -8,6 +8,44 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
+            "1.0.2": {
+                "date": "07 June 2025",
+                "title": "🎨 Color Role System Overhaul",
+                "features": [
+                    "Implemented toggle functionality for color roles (click again to remove)",
+                    "Positioned color roles above FCKR role for better visibility",
+                    "Replaced static message IDs with dynamic message creation",
+                    "Added detailed confirmation messages for role changes",
+                    "Added ASCII art to help command and README"
+                ],
+                "fixes": [
+                    "Improved error handling and user feedback",
+                    "Clean up environment variables by removing unused color message IDs",
+                    "Enhanced role positioning verification system"
+                ],
+                "technical": [
+                    "Overhauled color role system architecture",
+                    "Implemented dynamic message management",
+                    "Added role position verification and auto-correction"
+                ]
+            },
+            "1.0.1": {
+                "date": "06 June 2025",
+                "title": "🔧 Bug Fixes & Command Updates",
+                "features": [
+                    "Added `!fckr neofetch` command for detailed system statistics",
+                    "Updated help command to include neofetch command"
+                ],
+                "fixes": [
+                    "Removed 'Today Joins' voice channel from automatic creation",
+                    "Changed admin command from `!fckr stats` to `!fckr neofetch`",
+                    "Fixed command conflicts between stats and system statistics"
+                ],
+                "technical": [
+                    "Cleaned up voice statistics module",
+                    "Simplified admin command structure"
+                ]
+            },
             "1.0.0": {
                 "date": "06 June 2025",
                 "title": "🎉 Initial Release - Complete Rewrite",

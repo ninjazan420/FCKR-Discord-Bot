@@ -14,6 +14,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.guilds = True
 intents.members = True
+intents.reactions = True
 
 bot = commands.Bot(command_prefix='!fckr ', intents=intents, help_command=None)
 
@@ -37,7 +38,7 @@ async def setup_cogs():
 async def on_ready():
     # Startup logging with timestamp and version
     timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    version = "1.0.0"
+    version = "1.0.2"
     print(f'{timestamp} # 🟢 Bot gestartet - Version {version}')
     print(f'{bot.user} has connected to Discord!')
     print(f'Bot is ready and serving {len(bot.guilds)} guilds')

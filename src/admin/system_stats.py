@@ -11,25 +11,11 @@ class SystemStatsCog(commands.Cog):
         self.bot = bot
         self.start_time = datetime.now()
     
-    @commands.command(name='fckr')
+    @commands.command(name='neofetch')
     @commands.has_permissions(administrator=True)
-    async def fckr_stats(self, ctx, subcommand: str = None):
+    async def fckr_neofetch(self, ctx):
         """Admin command for FCKR system statistics"""
-        if subcommand == 'stats':
-            await self.show_system_stats(ctx)
-        else:
-            embed = discord.Embed(
-                title="🤖 FCKR Admin Commands",
-                description="Available subcommands:",
-                color=0x00ff00
-            )
-            embed.add_field(
-                name="📊 `!fckr stats`",
-                value="Show detailed system and bot statistics",
-                inline=False
-            )
-            embed.set_footer(text="Admin only commands")
-            await ctx.send(embed=embed)
+        await self.show_system_stats(ctx)
     
     async def show_system_stats(self, ctx):
         """Display comprehensive system statistics"""

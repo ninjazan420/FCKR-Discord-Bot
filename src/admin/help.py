@@ -19,9 +19,11 @@ class HelpCog(commands.Cog):
         memory_total = round(memory.total / 1024 / 1024 / 1024, 2)
         memory_percent = memory.percent
         
+        ascii_art = "```\n▄████  ▄█▄    █  █▀ █▄▄▄▄ \n█▀   ▀ █▀ ▀▄  █▄█   █  ▄▀ \n█▀▀    █   ▀  █▀▄   █▀▀▌  \n█      █▄  ▄▀ █  █  █  █  \n █     ▀███▀    █     █   \n  ▀            ▀     ▀    \n                           \n```"
+        
         embed = discord.Embed(
             title="FCKR Discord Bot",
-            description="The official Discord Bot for the FCKR Tag & Community server made by ninjazan420",
+            description=f"{ascii_art}\nThe official Discord Bot for the FCKR Tag & Community server made by ninjazan420",
             color=0x00ff00
         )
         
@@ -31,13 +33,14 @@ class HelpCog(commands.Cog):
                   "`!fckr stats` - Show server statistics\n"
                   "`!fckr colors` - Setup color role selection\n"
                   "`!fckr changelog` - Show recent updates\n"
-                  "`!fckr refresh` - Refresh server statistics (Admin only)",
+                  "`!fckr refresh` - Refresh server statistics (Admin only)\n"
+                  "`!fckr neofetch` - Show detailed system stats (Admin only)",
             inline=False
         )
         
         embed.add_field(
             name="Features",
-            value="• Automatic voice channel statistics\n• Server member tracking\n• FCKR tag member count\n• Boost count tracking\n• Daily join statistics\n• Color role system with 30 gradient colors",
+            value="• Automatic voice channel statistics\n• Server member tracking\n• Boost count tracking\n• Daily join statistics\n• Color role system with 30 gradient colors",
             inline=False
         )
         
