@@ -8,6 +8,29 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
+            "1.0.4": {
+                "date": "07 June 2025",
+                "title": "🎮 Counting Game & Voice Channel Enhancements",
+                "features": [
+                    "Added counting game system with automatic validation",
+                    "Added #️⃣ Counting voice channel to display current count",
+                    "Added GitHub repository and issue links to help command",
+                    "Smart restart detection for counting system",
+                    "Admin commands for counting management (!fckr count, !fckr reset_count)"
+                ],
+                "fixes": [
+                    "Automatic deletion of invalid counting messages with private user notifications",
+                    "Prevention of same user counting twice in a row with ephemeral feedback",
+                    "Green checkmark reactions for valid counting messages",
+                    "Private DM notifications for deletion reasons instead of public messages"
+                ],
+                "technical": [
+                    "Implemented CountingCog with on_message listener",
+                    "Added counting channel history parsing for restart detection",
+                    "Extended voice statistics to include counting display",
+                    "Added COUNTING_CHANNEL_ID environment variable support"
+                ]
+            },
             "1.0.3": {
                 "date": "07 June 2025",
                 "title": "🔧 Critical Bug Fixes & Enhancements",

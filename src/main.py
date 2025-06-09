@@ -25,6 +25,7 @@ async def setup_cogs():
     from admin.system_stats import SystemStatsCog
     from color_roles import ColorRolesCog
     from changelog import ChangelogCog
+    from counting import CountingCog
     
     # Add cogs to bot
     await bot.add_cog(HelpCog(bot))
@@ -32,13 +33,14 @@ async def setup_cogs():
     await bot.add_cog(SystemStatsCog(bot))
     await bot.add_cog(ColorRolesCog(bot))
     await bot.add_cog(ChangelogCog(bot))
+    await bot.add_cog(CountingCog(bot))
     print("✅ All cogs loaded successfully")
 
 @bot.event
 async def on_ready():
     # Startup logging with timestamp and version
     timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    version = "1.0.3"
+    version = "1.0.4"
     
     # ASCII Art for console
     ascii_art = """
@@ -73,9 +75,9 @@ async def on_ready():
     voice_stats_cog = bot.get_cog('VoiceStatsCog')
     if voice_stats_cog:
         await voice_stats_cog.setup_voice_channels()
-        if not voice_stats_cog.update_voice_stats.is_running():
-            voice_stats_cog.update_voice_stats.start()
-            print("✅ Voice stats task started")
+        # Initial stats update
+        await voice_stats_cog.update_all_voice_stats()
+        print("✅ Voice stats initialized with live updates")
     
     # Log to bot logging channel if configured
     bot_logging_channel_id = int(os.getenv('BOT_LOGGING', 0))

@@ -1,4 +1,4 @@
-# FCKR-Discord-Bot 1.0.3
+# FCKR-Discord-Bot 1.0.4
 
 ```
 ▄████  ▄█▄    █  █▀ █▄▄▄▄ 
@@ -14,18 +14,25 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 
 ## 📋 Table of Contents
 
-- [Features](#-features)
-- [Quick Start](#-quick-start)
-- [Docker Commands](#-docker-commands)
-- [Commands](#-commands)
-- [Development](#-development)
-- [Environment Variables](#-environment-variables)
-- [Version History](#-version-history)
-- [License](#license)
+- [FCKR-Discord-Bot 1.0.4](#fckr-discord-bot-104)
+  - [📋 Table of Contents](#-table-of-contents)
+  - [✨ Features](#-features)
+  - [🚀 Quick Start](#-quick-start)
+  - [🐳 Docker Commands](#-docker-commands)
+  - [🎮 Commands](#-commands)
+    - [Core Commands](#core-commands)
+    - [Admin Commands](#admin-commands)
+  - [💻 Development](#-development)
+    - [Local Development Setup](#local-development-setup)
+    - [Project Structure](#project-structure)
+  - [🔧 Environment Variables](#-environment-variables)
+  - [📈 Version History](#-version-history)
+  - [📄 License](#-license)
 
 ## ✨ Features
 
-- **🔄 Automatic Voice Channel Statistics**: Real-time updates every 4 minutes showing total members, FCKR tag members, boost count, and daily joins
+- **🔄 Automatic Voice Channel Statistics**: Real-time updates every 4 minutes showing total members, FCKR tag members, boost count, daily joins, and counting progress
+- **🎮 Counting Game**: Automatic validation system with smart restart detection, admin management, and private user notifications
 - **🎨 Color Role System**: 30 gradient colors with reaction-based selection in dedicated channel
 - **📊 System Monitoring**: Built-in system stats display (CPU, RAM, OS info)
 - **📋 Changelog System**: Complete version history and update tracking
@@ -84,6 +91,8 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 | `!fckr setup_colors` | Manually setup color role system | Administrator |
 | `!fckr refresh` | Manually refresh voice channel statistics | Administrator |
 | `!fckr neofetch` | Show detailed system stats | Administrator |
+| `!fckr count` | Show current counting status | Administrator |
+| `!fckr reset_count [number]` | Reset counting to specified number | Administrator |
 
 ## 💻 Development
 
@@ -146,11 +155,36 @@ FCKR-Discord-Bot/
 | `FCKR_SERVER` | Your Discord server ID | ✅ |
 | `BOT_LOGGING` | Channel ID for bot logging | ✅ |
 | `ROLES_CHANNEL_ID` | Channel ID for color role selection | ✅ |
+| `COUNTING_CHANNEL_ID` | Channel ID for counting game | ✅ |
 
 ## 📈 Version History
 
 <details open>
-<summary><strong>Version 1.0.3</strong> (Current) - 🔧 Critical Bug Fixes & Enhancements</summary>
+<summary><strong>Version 1.0.4</strong> (Current) - 🎮 Counting Game & Voice Channel Enhancements</summary>
+
+**🆕 Features:**
+- Added counting game system with automatic validation
+- Added #️⃣ Counting voice channel to display current count
+- Added GitHub repository and issue links to help command
+- Smart restart detection for counting system
+- Admin commands for counting management (!fckr count, !fckr reset_count)
+
+**🔧 Fixes:**
+- Automatic deletion of invalid counting messages with private user notifications
+- Prevention of same user counting twice in a row with ephemeral feedback
+- Green checkmark reactions for valid counting messages
+- Private DM notifications for deletion reasons instead of public messages
+
+**⚙️ Technical:**
+- Implemented CountingCog with on_message listener
+- Added counting channel history parsing for restart detection
+- Extended voice statistics to include counting display
+- Added COUNTING_CHANNEL_ID environment variable support
+
+</details>
+
+<details>
+<summary><strong>Version 1.0.3</strong> - 🔧 Critical Bug Fixes & Enhancements</summary>
 
 **🆕 Features:**
 - Enhanced bot startup message with ASCII art and admin mentions

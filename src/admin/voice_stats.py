@@ -16,7 +16,8 @@ class VoiceStatsCog(commands.Cog):
         # Voice channel IDs (will be created automatically)
         self.voice_channels = {
             'total_members': None,
-            'boost_count': None
+            'boost_count': None,
+            'counting': None
         }
         
         # Track if channels are already set up
@@ -37,7 +38,8 @@ class VoiceStatsCog(commands.Cog):
         # Find existing channels or create new ones
         channel_patterns = {
             'total_members': ['total members', 'members'],
-            'boost_count': ['boosts', 'boost']
+            'boost_count': ['boosts', 'boost'],
+            'counting': ['counting', '#counting']
         }
         
         for key, patterns in channel_patterns.items():
@@ -56,7 +58,8 @@ class VoiceStatsCog(commands.Cog):
                 # Create new channel
                 default_names = {
                     'total_members': '👥 Total Members: 0',
-                    'boost_count': '🚀 Boosts: 0'
+                    'boost_count': '🚀 Boosts: 0',
+                    'counting': '#️⃣ Counting: 0'
                 }
                 try:
                     new_channel = await guild.create_voice_channel(
@@ -95,9 +98,8 @@ class VoiceStatsCog(commands.Cog):
             print(f"Error reading audit log: {e}")
             # Fallback: keep current counter
     
-    @tasks.loop(minutes=4)
-    async def update_voice_stats(self):
-        """Update voice channel statistics every 4 minutes"""
+    async def update_all_voice_stats(self):
+        """Update all voice channel statistics"""
         guild = self.bot.get_guild(self.fckr_server_id)
         if not guild:
             return
@@ -111,12 +113,12 @@ class VoiceStatsCog(commands.Cog):
         # Get statistics
         total_members = guild.member_count
         boost_count = guild.premium_subscription_count or 0
+        counting_number = await self.get_current_counting_number()
         
         # Update channels
         await self.update_channel('total_members', f'👥 Total Members: {total_members}')
         await self.update_channel('boost_count', f'🚀 Boosts: {boost_count}')
-        
-        # No automatic logging - only update voice channels silently
+        await self.update_channel('counting', f'#️⃣ Counting: {counting_number}')
     
 
     
@@ -133,13 +135,61 @@ class VoiceStatsCog(commands.Cog):
             except Exception as e:
                 print(f"Error updating channel {channel_key}: {e}")
     
+    async def get_current_counting_number(self):
+        """Get the current counting number from the counting channel"""
+        counting_channel_id = int(os.getenv('COUNTING_CHANNEL_ID', 0))
+        if not counting_channel_id:
+            return 0
+        
+        counting_channel = self.bot.get_channel(counting_channel_id)
+        if not counting_channel:
+            return 0
+        
+        try:
+            # Get the last 100 messages to find the latest valid number
+            async for message in counting_channel.history(limit=100):
+                if message.author.bot:
+                    continue
+                
+                # Extract number from message
+                content = message.content.strip()
+                if content.isdigit():
+                    return int(content)
+                
+                # Try to extract number from start of message
+                words = content.split()
+                if words and words[0].isdigit():
+                    return int(words[0])
+            
+            return 0
+        except Exception as e:
+            print(f"Error getting counting number: {e}")
+            return 0
+    
     # Removed automatic logging function - only manual refreshes are logged now
     
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        """Track daily joins"""
+        """Track daily joins and update voice stats live"""
         if member.guild.id == self.fckr_server_id:
             self.daily_joins += 1
+            # Update voice stats immediately
+            await self.update_all_voice_stats()
+    
+    @commands.Cog.listener()
+    async def on_member_remove(self, member):
+        """Update voice stats when member leaves"""
+        if member.guild.id == self.fckr_server_id:
+            # Update voice stats immediately
+            await self.update_all_voice_stats()
+    
+    @commands.Cog.listener()
+    async def on_guild_update(self, before, after):
+        """Update voice stats when guild is updated (boost changes)"""
+        if after.id == self.fckr_server_id:
+            # Check if boost count changed
+            if before.premium_subscription_count != after.premium_subscription_count:
+                await self.update_all_voice_stats()
     
     @commands.command(name='stats')
     async def manual_stats(self, ctx):
@@ -151,6 +201,7 @@ class VoiceStatsCog(commands.Cog):
         
         total_members = guild.member_count
         boost_count = guild.premium_subscription_count or 0
+        counting_number = await self.get_current_counting_number()
         
         embed = discord.Embed(
             title="📊 FCKR Server Statistics",
@@ -160,8 +211,9 @@ class VoiceStatsCog(commands.Cog):
         
         embed.add_field(name="👥 Total Members", value=str(total_members), inline=True)
         embed.add_field(name="🚀 Boosts", value=str(boost_count), inline=True)
+        embed.add_field(name="#️⃣ Counting", value=str(counting_number), inline=True)
         
-        embed.set_footer(text="Statistics updated every 4 minutes")
+        embed.set_footer(text="Statistics updated live")
         
         await ctx.send(embed=embed)
     
@@ -185,10 +237,12 @@ class VoiceStatsCog(commands.Cog):
         # Get statistics
         total_members = guild.member_count
         boost_count = guild.premium_subscription_count or 0
+        counting_number = await self.get_current_counting_number()
         
         # Update channels
         await self.update_channel('total_members', f'👥 Total Members: {total_members}')
         await self.update_channel('boost_count', f'🚀 Boosts: {boost_count}')
+        await self.update_channel('counting', f'#️⃣ Counting: {counting_number}')
         
         # Send combined confirmation and log to bot logging channel
         embed = discord.Embed(
@@ -200,6 +254,7 @@ class VoiceStatsCog(commands.Cog):
         
         embed.add_field(name="👥 Total Members", value=str(total_members), inline=True)
         embed.add_field(name="🚀 Boosts", value=str(boost_count), inline=True)
+        embed.add_field(name="#️⃣ Counting", value=str(counting_number), inline=True)
         
         await ctx.send(embed=embed)
     
