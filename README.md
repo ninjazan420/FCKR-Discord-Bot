@@ -1,4 +1,4 @@
-# FCKR-Discord-Bot 1.0.4
+# FCKR-Discord-Bot 1.0.5
 
 ```
 ▄████  ▄█▄    █  █▀ █▄▄▄▄ 
@@ -14,7 +14,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 
 ## 📋 Table of Contents
 
-- [FCKR-Discord-Bot 1.0.4](#fckr-discord-bot-104)
+- [FCKR-Discord-Bot 1.0.5](#fckr-discord-bot-105)
   - [📋 Table of Contents](#-table-of-contents)
   - [✨ Features](#-features)
   - [🚀 Quick Start](#-quick-start)
@@ -160,7 +160,33 @@ FCKR-Discord-Bot/
 ## 📈 Version History
 
 <details open>
-<summary><strong>Version 1.0.4</strong> (Current) - 🎮 Counting Game & Voice Channel Enhancements</summary>
+<summary><strong>Version 1.0.5</strong> (Current) - 🌐 Language Standardization & Message Policy Update</summary>
+
+**🆕 Features:**
+- Standardized all bot responses to English language
+- Replaced private messages with ephemeral channel messages
+- Enhanced user privacy with dismissible error messages
+- Improved message consistency across all modules
+- Updated project documentation to reflect new policies
+
+**🔧 Fixes:**
+- Translated German cooldown messages to English in Color Roles
+- Converted German error messages to English in Counting system
+- Replaced private DMs with ephemeral messages for better UX
+- Updated footer texts and field names to English
+- Improved error message clarity and consistency
+
+**⚙️ Technical:**
+- Modified color_roles.py to use English strings and ephemeral messages
+- Updated counting.py to send ephemeral error messages in channel
+- Enhanced project_rules.md with new language and message policies
+- Updated notes.md documentation with comprehensive change tracking
+- Implemented consistent embed-based error messaging
+
+</details>
+
+<details>
+<summary><strong>Version 1.0.4</strong> - 🎮 Counting Game & Voice Channel Enhancements</summary>
 
 **🆕 Features:**
 - Added counting game system with automatic validation

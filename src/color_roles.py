@@ -212,11 +212,11 @@ class ColorRolesCog(commands.Cog):
                     channel = reaction.message.channel
                     if channel:
                         cooldown_embed = discord.Embed(
-                            title="⏰ Cooldown aktiv",
-                            description=f"You got to wait **{remaining:.1f} seconds** to be able to change your color again.",
+                            title="⏰ Cooldown Active",
+                            description=f"You need to wait **{remaining:.1f} seconds** before you can change your color again.",
                             color=0xffa500
                         )
-                        cooldown_embed.set_footer(text="Bitte warte einen Moment! ⏳")
+                        cooldown_embed.set_footer(text="Please wait a moment! ⏳")
                         await channel.send(f"<@{user.id}>", embed=cooldown_embed, delete_after=3)
                 except:
                     pass
@@ -270,9 +270,16 @@ class ColorRolesCog(commands.Cog):
                 print(f"✅ Repositioned {desired_role_name} above FCKR role")
             except Exception as e:
                 print(f"❌ Failed to reposition {desired_role_name}: {e}")
-                # Send error message to user privately
+                # Send error message to user via ephemeral message
                 try:
-                    await user.send(f"❌ Es gab ein Problem beim Zuweisen der Farbrolle {desired_role_name}. Bitte versuche es erneut oder kontaktiere einen Admin.")
+                    channel = reaction.message.channel
+                    if channel:
+                        error_embed = discord.Embed(
+                            title="❌ Error",
+                            description=f"There was a problem assigning the color role {desired_role_name}. Please try again or contact an admin.",
+                            color=0xff0000
+                        )
+                        await channel.send(f"<@{user.id}>", embed=error_embed, delete_after=7.5)
                 except:
                     pass
                 return
@@ -292,11 +299,11 @@ class ColorRolesCog(commands.Cog):
                     channel = reaction.message.channel
                     if channel:
                         confirm_embed = discord.Embed(
-                            title="🎨 Farbrolle entfernt!",
-                            description=f"Deine Farbrolle **{desired_role_name}** wurde erfolgreich entfernt! 💫",
+                            title="🎨 Color Role Removed!",
+                            description=f"Your color role **{desired_role_name}** has been successfully removed! 💫",
                             color=0x808080  # Gray color for removal
                         )
-                        confirm_embed.set_footer(text="Du kannst jederzeit eine neue Farbe wählen! ✨")
+                        confirm_embed.set_footer(text="You can choose a new color anytime! ✨")
                         
                         # Send ephemeral message in channel
                         await channel.send(f"<@{user.id}>", embed=confirm_embed, delete_after=7.5)
@@ -320,19 +327,19 @@ class ColorRolesCog(commands.Cog):
                     channel = reaction.message.channel
                     if channel:
                         confirm_embed = discord.Embed(
-                            title="🎨 Farbrolle geändert!",
-                            description=f"Deine neue Farbe **{desired_role_name}** wurde erfolgreich zugewiesen! ✨",
+                            title="🎨 Color Role Changed!",
+                            description=f"Your new color **{desired_role_name}** has been successfully assigned! ✨",
                             color=self.color_palette[color_index]
                         )
                         
                         if removed_roles:
                             confirm_embed.add_field(
-                                name="Vorherige Farbe entfernt",
+                                name="Previous Color Removed",
                                 value=f"**{removed_roles[0]}**",
                                 inline=False
                             )
                         
-                        confirm_embed.set_footer(text="Klicke erneut auf die gleiche Reaktion, um die Farbe zu entfernen! 💫")
+                        confirm_embed.set_footer(text="Click the same reaction again to remove the color! 💫")
                         
                         # Send ephemeral message in channel
                         await channel.send(f"<@{user.id}>", embed=confirm_embed, delete_after=7.5)
@@ -346,8 +353,8 @@ class ColorRolesCog(commands.Cog):
                 channel = reaction.message.channel
                 if channel:
                     error_embed = discord.Embed(
-                        title="❌ Fehler",
-                        description="Es gab ein Problem beim Verwalten deiner Farbrolle. Bitte versuche es erneut oder kontaktiere einen Admin.",
+                        title="❌ Error",
+                        description="There was a problem managing your color role. Please try again or contact an admin.",
                         color=0xff0000
                     )
                     await channel.send(f"<@{user.id}>", embed=error_embed, delete_after=7.5)

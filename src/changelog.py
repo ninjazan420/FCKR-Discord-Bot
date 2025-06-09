@@ -8,6 +8,25 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
+            "1.0.5": {
+                "date": "07 June 2025",
+                "title": "🌐 Language Standardization & Message Policy Update",
+                "features": [
+                    "Replaced private messages with ephemeral channel messages",
+                    "Enhanced user privacy with dismissible error messages",
+                    "Improved message consistency across all modules",
+                    "Updated project documentation to reflect new policies"
+                ],
+                "fixes": [
+                    "Replaced private DMs with ephemeral messages for better UX",
+                    "Improved error message clarity and consistency"
+                ],
+                "technical": [
+                    "Modified color_roles.py to use English strings and ephemeral messages",
+                    "Updated counting.py to send ephemeral error messages in channel",
+                    "Implemented consistent embed-based error messaging"
+                ]
+            },
             "1.0.4": {
                 "date": "07 June 2025",
                 "title": "🎮 Counting Game & Voice Channel Enhancements",
