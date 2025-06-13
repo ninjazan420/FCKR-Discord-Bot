@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import os
 import re
+import asyncio
 from datetime import datetime
 
 class CountingCog(commands.Cog):
@@ -34,9 +35,10 @@ class CountingCog(commands.Cog):
         
         print(f"🔢 Initializing counting system in {counting_channel.name}")
         
-        # Read the last 100 messages to find the highest valid count
+        # Read the last 200 messages to find the highest valid count
+        valid_messages = []
         try:
-            async for message in counting_channel.history(limit=100):
+            async for message in counting_channel.history(limit=200, oldest_first=False):
                 # Skip bot messages
                 if message.author.bot:
                     continue
@@ -48,10 +50,29 @@ class CountingCog(commands.Cog):
                     # Extract number from message
                     number = self.extract_number(message.content)
                     if number is not None:
-                        self.current_count = number
-                        self.last_user_id = message.author.id
-                        print(f"✅ Found last valid count: {self.current_count} by {message.author.display_name}")
-                        return
+                        valid_messages.append((number, message.author.id, message.created_at, message.id))
+            
+            # Sort by creation time to get chronological order (newest first)
+            valid_messages.sort(key=lambda x: x[2], reverse=True)
+            
+            # Find the most recent valid count
+            if valid_messages:
+                # Take the most recent valid message (first in sorted list)
+                self.current_count, self.last_user_id, _, message_id = valid_messages[0]
+                print(f"✅ Found last valid count: {self.current_count} by user ID {self.last_user_id} (message ID: {message_id})")
+                
+                # Verify this is actually the correct sequence by checking if it's the highest number
+                # in a valid sequence
+                max_valid_count = 0
+                for number, user_id, created_at, msg_id in reversed(valid_messages):  # oldest first
+                    if number == max_valid_count + 1:
+                        max_valid_count = number
+                        if number > self.current_count:
+                            self.current_count = number
+                            self.last_user_id = user_id
+                
+                print(f"✅ Verified count sequence, current count: {self.current_count}")
+                return
             
             # If no valid count found, start from 0
             self.current_count = 0
@@ -87,13 +108,20 @@ class CountingCog(commands.Cog):
         if number is None:
             try:
                 await message.delete()
-                # Send ephemeral message to user in channel
+                # Send ephemeral error message
                 error_embed = discord.Embed(
                     title="❌ Invalid Message",
                     description=f"Your message '{message.content[:50]}' was deleted because it didn't contain a valid number.",
                     color=0xff0000
                 )
-                await message.channel.send(f"<@{message.author.id}>", embed=error_embed, delete_after=5)
+                # Try to send as ephemeral reply, fallback to delete_after
+                try:
+                    if hasattr(message, 'reply'):
+                        await message.reply(embed=error_embed, ephemeral=True, delete_after=10)
+                    else:
+                        await message.channel.send(f"{message.author.mention}", embed=error_embed, delete_after=10)
+                except:
+                    await message.channel.send(f"{message.author.mention}", embed=error_embed, delete_after=10)
                 print(f"🗑️ Deleted non-numeric message from {message.author.display_name}: {message.content[:50]}")
             except Exception as e:
                 print(f"❌ Error deleting message or sending ephemeral message: {e}")
@@ -107,13 +135,20 @@ class CountingCog(commands.Cog):
             if self.last_user_id == message.author.id:
                 try:
                     await message.delete()
-                    # Send ephemeral message to user in channel
+                    # Send ephemeral error message
                     error_embed = discord.Embed(
                         title="❌ Same User Twice",
                         description="You cannot count twice in a row. Wait for someone else to count.",
                         color=0xff0000
                     )
-                    await message.channel.send(f"<@{message.author.id}>", embed=error_embed, delete_after=5)
+                    # Try to send as ephemeral reply, fallback to delete_after
+                    try:
+                        if hasattr(message, 'reply'):
+                            await message.reply(embed=error_embed, ephemeral=True, delete_after=10)
+                        else:
+                            await message.channel.send(f"{message.author.mention}", embed=error_embed, delete_after=10)
+                    except:
+                        await message.channel.send(f"{message.author.mention}", embed=error_embed, delete_after=10)
                     print(f"🗑️ Deleted message from {message.author.display_name}: same user can't count twice in a row")
                 except Exception as e:
                     print(f"❌ Error deleting message or sending ephemeral message: {e}")
@@ -129,20 +164,25 @@ class CountingCog(commands.Cog):
                 print(f"❌ Error adding reaction: {e}")
         
         else:
-            # Wrong number, delete message
+            # Wrong number, delete message but DON'T reset count
             try:
                 await message.delete()
-                # Send ephemeral message to user in channel
+                # Send ephemeral error message
                 error_embed = discord.Embed(
                     title="❌ Wrong Number",
-                    description=f"Your number {number} was wrong. The next number should have been {expected_number}. Counting starts over!",
+                    description=f"Your number {number} was wrong. The next number should be {expected_number}.",
                     color=0xff0000
                 )
-                await message.channel.send(f"<@{message.author.id}>", embed=error_embed, delete_after=7)
+                # Try to send as ephemeral reply, fallback to delete_after
+                try:
+                    if hasattr(message, 'reply'):
+                        await message.reply(embed=error_embed, ephemeral=True, delete_after=10)
+                    else:
+                        await message.channel.send(f"{message.author.mention}", embed=error_embed, delete_after=10)
+                except:
+                    await message.channel.send(f"{message.author.mention}", embed=error_embed, delete_after=10)
                 print(f"🗑️ Deleted wrong number from {message.author.display_name}: {number} (expected {expected_number})")
-                # Reset count if wrong number
-                self.current_count = 0
-                self.last_user_id = None
+                # DON'T reset count - just continue with the current count
             except Exception as e:
                 print(f"❌ Error deleting message or sending ephemeral message: {e}")
     
@@ -174,7 +214,11 @@ class CountingCog(commands.Cog):
         
         embed.set_footer(text=f"Requested by {ctx.author.display_name}")
         
-        await ctx.send(embed=embed)
+        # Send as ephemeral if possible
+        try:
+            await ctx.send(embed=embed, ephemeral=True)
+        except:
+            await ctx.send(embed=embed)
     
     @commands.command(name='reset_count')
     @commands.has_permissions(administrator=True)
@@ -199,7 +243,11 @@ class CountingCog(commands.Cog):
         embed.add_field(name="Next Expected", value=str(new_count + 1), inline=True)
         embed.add_field(name="Reset by", value=ctx.author.display_name, inline=True)
         
-        await ctx.send(embed=embed)
+        # Send as ephemeral if possible
+        try:
+            await ctx.send(embed=embed, ephemeral=True)
+        except:
+            await ctx.send(embed=embed)
         print(f"🔄 Count reset from {old_count} to {new_count} by {ctx.author.display_name}")
 
 def setup(bot):

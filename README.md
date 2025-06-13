@@ -1,4 +1,4 @@
-# FCKR-Discord-Bot 1.0.5
+# FCKR-Discord-Bot 1.0.6
 
 ```
 ▄████  ▄█▄    █  █▀ █▄▄▄▄ 
@@ -14,7 +14,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 
 ## 📋 Table of Contents
 
-- [FCKR-Discord-Bot 1.0.5](#fckr-discord-bot-105)
+- [FCKR-Discord-Bot 1.0.7](#fckr-discord-bot-107)
   - [📋 Table of Contents](#-table-of-contents)
   - [✨ Features](#-features)
   - [🚀 Quick Start](#-quick-start)
@@ -34,6 +34,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 - **🔄 Automatic Voice Channel Statistics**: Real-time updates every 4 minutes showing total members, FCKR tag members, boost count, daily joins, and counting progress
 - **🎮 Counting Game**: Automatic validation system with smart restart detection, admin management, and private user notifications
 - **🎨 Color Role System**: 30 gradient colors with reaction-based selection in dedicated channel
+- **🗑️ Message Purge System**: Admin-only bulk message deletion with configurable count (1-100 messages)
 - **📊 System Monitoring**: Built-in system stats display (CPU, RAM, OS info)
 - **📋 Changelog System**: Complete version history and update tracking
 - **🧩 Modular Architecture**: Clean cog-based structure for easy maintenance and expansion
@@ -93,6 +94,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 | `!fckr neofetch` | Show detailed system stats | Administrator |
 | `!fckr count` | Show current counting status | Administrator |
 | `!fckr reset_count [number]` | Reset counting to specified number | Administrator |
+| `!fckr purge [amount]` | Delete specified number of messages (1-100) | Administrator |
 
 ## 💻 Development
 
@@ -136,6 +138,7 @@ FCKR-Discord-Bot/
 ├── src/
 │   ├── admin/
 │   │   ├── help.py          # Help command
+│   │   ├── purge.py         # Message purge system
 │   │   ├── system_stats.py  # System statistics
 │   │   └── voice_stats.py   # Voice channel stats
 │   ├── changelog.py         # Version history
@@ -160,7 +163,52 @@ FCKR-Discord-Bot/
 ## 📈 Version History
 
 <details open>
-<summary><strong>Version 1.0.5</strong> (Current) - 🌐 Language Standardization & Message Policy Update</summary>
+<summary><strong>Version 1.0.7</strong> (Current) - 🗑️ Message Purge System</summary>
+
+**🆕 Features:**
+- Added !fckr purge command for administrators to delete messages
+- Configurable message deletion count (1-100 messages)
+- Admin-only access with permission validation
+- Auto-deleting confirmation messages for clean channels
+
+**🔧 Fixes:**
+- Enhanced error handling for Discord API limitations
+- Proper permission checking before command execution
+- Graceful handling of missing permissions and API errors
+
+**⚙️ Technical:**
+- Created new PurgeCog in admin/purge.py
+- Integrated purge command into help system
+- Added comprehensive error handling and user feedback
+- Implemented Discord bulk delete with safety limits
+
+</details>
+
+<details>
+<summary><strong>Version 1.0.6</strong> - 🔢 Counting System Hotfix</summary>
+
+**🆕 Features:**
+- Enhanced counting system initialization with 200 message history scan
+- Improved sequence validation for better restart detection
+- Added message ID tracking for debugging purposes
+
+**🔧 Fixes:**
+- Fixed counting system resetting to 0 on wrong numbers - now maintains count
+- Replaced private messages with ephemeral channel messages (auto-delete after 10s)
+- Improved counting initialization to find correct sequence after bot restart
+- Enhanced error message clarity for counting violations
+
+**⚙️ Technical:**
+- Modified counting.py to use ephemeral messages instead of DMs
+- Removed count reset logic on wrong numbers - count persists
+- Enhanced initialize_counting() with better sequence detection
+- Increased message history scan from 100 to 200 messages
+- Added chronological sorting and sequence verification
+
+</details>
+
+<details>
+<summary><strong>Version 1.0.5</strong> - 🌐 Language Standardization & Message Policy Update</summary>
 
 **🆕 Features:**
 - Standardized all bot responses to English language

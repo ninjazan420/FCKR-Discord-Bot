@@ -101,7 +101,7 @@ class ColorRolesCog(commands.Cog):
         await self.verify_color_role_positions(guild, fckr_role)
 
     async def setup_roles_channel(self):
-        """Set up the roles channel with fresh color selection messages"""
+        """Set up the roles channel with color selection messages (reuse existing if found)"""
         guild = self.bot.get_guild(self.fckr_server_id)
         if not guild:
             print(f"❌ Guild with ID {self.fckr_server_id} not found")
@@ -112,18 +112,38 @@ class ColorRolesCog(commands.Cog):
             print(f"❌ Roles channel with ID {self.roles_channel_id} not found")
             return
         
-        print(f"🎨 Setting up fresh color role messages in {roles_channel.name}")
+        print(f"🎨 Setting up color role messages in {roles_channel.name}")
         
-        # Clear old color messages (search for messages with "Color Roles" in title)
+        # Look for existing color role messages
+        existing_messages = []
         try:
             async for message in roles_channel.history(limit=50):
                 if (message.author == self.bot.user and 
                     message.embeds and 
                     "Color Roles" in message.embeds[0].title):
+                    existing_messages.append(message)
+                    print(f"✅ Found existing color message: {message.id}")
+        except Exception as e:
+            print(f"⚠️ Could not search for existing messages: {e}")
+        
+        # If we have exactly 3 existing messages, reuse them
+        if len(existing_messages) == 3:
+            print(f"🔄 Reusing {len(existing_messages)} existing color role messages")
+            # Sort by creation time to maintain order
+            existing_messages.sort(key=lambda m: m.created_at)
+            self.color_message_ids = [msg.id for msg in existing_messages]
+            print(f"📍 Reusing Message IDs: {self.color_message_ids}")
+            return
+        
+        # Clear old messages if we don't have exactly 3
+        if existing_messages:
+            print(f"🗑️ Clearing {len(existing_messages)} old color messages")
+            for message in existing_messages:
+                try:
                     await message.delete()
                     print(f"🗑️ Deleted old color message: {message.id}")
-        except Exception as e:
-            print(f"⚠️ Could not clear old messages: {e}")
+                except Exception as e:
+                    print(f"⚠️ Could not delete message {message.id}: {e}")
         
         # Create 3 new messages with 10 colors each
         number_emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
@@ -217,7 +237,7 @@ class ColorRolesCog(commands.Cog):
                             color=0xffa500
                         )
                         cooldown_embed.set_footer(text="Please wait a moment! ⏳")
-                        await channel.send(f"<@{user.id}>", embed=cooldown_embed, delete_after=3)
+                        await user.send(embed=cooldown_embed)
                 except:
                     pass
                 return
@@ -279,7 +299,7 @@ class ColorRolesCog(commands.Cog):
                             description=f"There was a problem assigning the color role {desired_role_name}. Please try again or contact an admin.",
                             color=0xff0000
                         )
-                        await channel.send(f"<@{user.id}>", embed=error_embed, delete_after=7.5)
+                        await user.send(embed=error_embed)
                 except:
                     pass
                 return
@@ -306,7 +326,7 @@ class ColorRolesCog(commands.Cog):
                         confirm_embed.set_footer(text="You can choose a new color anytime! ✨")
                         
                         # Send ephemeral message in channel
-                        await channel.send(f"<@{user.id}>", embed=confirm_embed, delete_after=7.5)
+                        await user.send(embed=confirm_embed)
                 except Exception as e:
                     print(f"⚠️ Error sending removal confirmation to {user.name}: {e}")
             else:
@@ -342,7 +362,7 @@ class ColorRolesCog(commands.Cog):
                         confirm_embed.set_footer(text="Click the same reaction again to remove the color! 💫")
                         
                         # Send ephemeral message in channel
-                        await channel.send(f"<@{user.id}>", embed=confirm_embed, delete_after=7.5)
+                        await user.send(embed=confirm_embed)
                 except Exception as e:
                     print(f"⚠️ Error sending confirmation to {user.name}: {e}")
                 
@@ -362,8 +382,9 @@ class ColorRolesCog(commands.Cog):
                 pass
     
     @commands.command(name='colors')
+    @commands.has_permissions(administrator=True)
     async def colors_command(self, ctx):
-        """Direct users to the color roles channel"""
+        """Admin command to direct users to the color roles channel"""
         embed = discord.Embed(
             title="🎨 Color Roles",
             description=f"Head over to <#{self.roles_channel_id}> to choose your username color!\n\n"

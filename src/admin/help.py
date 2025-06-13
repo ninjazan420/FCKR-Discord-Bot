@@ -43,7 +43,8 @@ class HelpCog(commands.Cog):
             "\n`!fckr refresh` - Refresh server statistics (Admin only)\n"
             "`!fckr neofetch` - Show detailed system stats (Admin only)\n"
             "`!fckr count` - Show counting status (Admin only)\n"
-            "`!fckr reset_count [number]` - Reset counting (Admin only)"
+            "`!fckr reset_count [number]` - Reset counting (Admin only)\n"
+            "`!fckr purge [amount]` - Delete specified number of messages (Admin only)"
         )
         
         # Show commands based on permissions

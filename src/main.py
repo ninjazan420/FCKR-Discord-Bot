@@ -23,6 +23,7 @@ async def setup_cogs():
     from admin.help import HelpCog
     from admin.voice_stats import VoiceStatsCog
     from admin.system_stats import SystemStatsCog
+    from admin.purge import PurgeCog
     from color_roles import ColorRolesCog
     from changelog import ChangelogCog
     from counting import CountingCog
@@ -31,6 +32,7 @@ async def setup_cogs():
     await bot.add_cog(HelpCog(bot))
     await bot.add_cog(VoiceStatsCog(bot))
     await bot.add_cog(SystemStatsCog(bot))
+    await bot.add_cog(PurgeCog(bot))
     await bot.add_cog(ColorRolesCog(bot))
     await bot.add_cog(ChangelogCog(bot))
     await bot.add_cog(CountingCog(bot))
@@ -40,7 +42,7 @@ async def setup_cogs():
 async def on_ready():
     # Startup logging with timestamp and version
     timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    version = "1.0.4"
+    version = "1.0.7"
     
     # ASCII Art for console
     ascii_art = """
@@ -85,7 +87,7 @@ async def on_ready():
         channel = bot.get_channel(bot_logging_channel_id)
         if channel:
             # Get admin users (you can customize this list)
-            admin_mentions = "<@ninjazan420>"  # Add more admin IDs as needed
+            admin_mentions = "@ninjazan420"  # Add more admin IDs as needed
             
             embed = discord.Embed(
                 title="🟢 FCKR Bot Started",

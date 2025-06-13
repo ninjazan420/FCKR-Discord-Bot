@@ -8,11 +8,53 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
+            "1.0.7": {
+                "date": "14 June 2025",
+                "title": "🗑️ Message Purge System",
+                "features": [
+                    "Added !fckr purge command for administrators to delete messages",
+                    "Configurable message deletion count (1-100 messages)",
+                    "Admin-only access with permission validation",
+                    "Auto-deleting confirmation messages for clean channels"
+                ],
+                "fixes": [
+                    "Enhanced error handling for Discord API limitations",
+                    "Proper permission checking before command execution",
+                    "Graceful handling of missing permissions and API errors"
+                ],
+                "technical": [
+                    "Created new PurgeCog in admin/purge.py",
+                    "Integrated purge command into help system",
+                    "Added comprehensive error handling and user feedback",
+                    "Implemented Discord bulk delete with safety limits"
+                ]
+            },
+            "1.0.6": {
+                "date": "14 June 2025",
+                "title": "🔢 Counting System Hotfix",
+                "features": [
+                    "Enhanced counting system initialization with 200 message history scan",
+                    "Improved sequence validation for better restart detection",
+                    "Added message ID tracking for debugging purposes"
+                ],
+                "fixes": [
+                    "Fixed counting system resetting to 0 on wrong numbers - now maintains count",
+                    "Replaced private messages with ephemeral channel messages (auto-delete after 10s)",
+                    "Improved counting initialization to find correct sequence after bot restart",
+                    "Enhanced error message clarity for counting violations"
+                ],
+                "technical": [
+                    "Modified counting.py to use ephemeral messages instead of DMs",
+                    "Removed count reset logic on wrong numbers - count persists",
+                    "Enhanced initialize_counting() with better sequence detection",
+                    "Increased message history scan from 100 to 200 messages",
+                    "Added chronological sorting and sequence verification"
+                ]
+            },
             "1.0.5": {
                 "date": "07 June 2025",
                 "title": "🌐 Language Standardization & Message Policy Update",
                 "features": [
-                    "Replaced private messages with ephemeral channel messages",
                     "Enhanced user privacy with dismissible error messages",
                     "Improved message consistency across all modules",
                     "Updated project documentation to reflect new policies"
