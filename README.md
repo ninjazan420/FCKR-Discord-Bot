@@ -1,4 +1,4 @@
-# FCKR-Discord-Bot 1.0.6
+# FCKR-Discord-Bot 1.0.8
 
 ```
 ▄████  ▄█▄    █  █▀ █▄▄▄▄ 
@@ -14,6 +14,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 
 ## 📋 Table of Contents
 
+- [FCKR-Discord-Bot 1.0.8](#fckr-discord-bot-108)
 - [FCKR-Discord-Bot 1.0.7](#fckr-discord-bot-107)
   - [📋 Table of Contents](#-table-of-contents)
   - [✨ Features](#-features)
@@ -163,7 +164,28 @@ FCKR-Discord-Bot/
 ## 📈 Version History
 
 <details open>
-<summary><strong>Version 1.0.7</strong> (Current) - 🗑️ Message Purge System</summary>
+<summary><strong>Version 1.0.8</strong> (Current) - 🔊 Live Voice Stats Updates</summary>
+
+**Release Date:** 14 June 2025
+
+**🆕 New Features:**
+- Voice channel statistics now update automatically when valid counting numbers are posted
+- Real-time counting display in voice channels without manual refresh
+- Seamless integration between counting system and voice stats
+
+**🐛 Bug Fixes:**
+- Eliminated need for manual !fckr refresh after counting
+- Improved user experience with instant stat updates
+
+**🔧 Technical Changes:**
+- Added voice stats update call to counting validation in counting.py
+- Integrated VoiceStatsCog.update_all_voice_stats() into counting workflow
+- Enhanced error handling for voice stats updates
+
+</details>
+
+<details>
+<summary><strong>Version 1.0.7</strong> - 🗑️ Message Purge System</summary>
 
 **🆕 Features:**
 - Added !fckr purge command for administrators to delete messages

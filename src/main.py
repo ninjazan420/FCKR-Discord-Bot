@@ -42,7 +42,7 @@ async def setup_cogs():
 async def on_ready():
     # Startup logging with timestamp and version
     timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    version = "1.0.7"
+    version = "1.0.8"
     
     # ASCII Art for console
     ascii_art = """

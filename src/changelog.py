@@ -8,6 +8,24 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
+            "1.0.8": {
+                "date": "14 June 2025",
+                "title": "🔊 Live Voice Stats Updates",
+                "features": [
+                    "Voice channel statistics now update automatically when valid counting numbers are posted",
+                    "Real-time counting display in voice channels without manual refresh",
+                    "Seamless integration between counting system and voice stats"
+                ],
+                "fixes": [
+                    "Eliminated need for manual !fckr refresh after counting",
+                    "Improved user experience with instant stat updates"
+                ],
+                "technical": [
+                    "Added voice stats update call to counting validation in counting.py",
+                    "Integrated VoiceStatsCog.update_all_voice_stats() into counting workflow",
+                    "Enhanced error handling for voice stats updates"
+                ]
+            },
             "1.0.7": {
                 "date": "14 June 2025",
                 "title": "🗑️ Message Purge System",

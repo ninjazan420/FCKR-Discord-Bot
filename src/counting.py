@@ -160,8 +160,14 @@ class CountingCog(commands.Cog):
                 self.current_count = number
                 self.last_user_id = message.author.id
                 print(f"✅ Valid count {number} by {message.author.display_name}")
+                
+                # Update voice stats immediately after valid count
+                voice_stats_cog = self.bot.get_cog('VoiceStatsCog')
+                if voice_stats_cog:
+                    await voice_stats_cog.update_all_voice_stats()
+                    print(f"🔊 Voice stats updated after count {number}")
             except Exception as e:
-                print(f"❌ Error adding reaction: {e}")
+                print(f"❌ Error adding reaction or updating voice stats: {e}")
         
         else:
             # Wrong number, delete message but DON'T reset count
