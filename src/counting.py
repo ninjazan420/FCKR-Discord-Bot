@@ -126,6 +126,73 @@ class CountingCog(commands.Cog):
                 print(f"🗑️ Deleted non-numeric message from {message.author.display_name}: {message.content[:50]}")
             except Exception as e:
                 print(f"❌ Error deleting message or sending ephemeral message: {e}")
+            return
+        
+        # Check if it's the correct next number
+        expected_number = self.current_count + 1
+        
+        if number == expected_number:
+            # Check if same user posted twice in a row
+            if self.last_user_id == message.author.id:
+                try:
+                    await message.delete()
+                    # Send ephemeral error message
+                    error_embed = discord.Embed(
+                        title="❌ Same User Twice",
+                        description="You cannot count twice in a row. Wait for someone else to count.",
+                        color=0xff0000
+                    )
+                    # Try to send as ephemeral reply, fallback to delete_after
+                    try:
+                        if hasattr(message, 'reply'):
+                            await message.reply(embed=error_embed, ephemeral=True, delete_after=10)
+                        else:
+                            await message.channel.send(f"{message.author.mention}", embed=error_embed, delete_after=10)
+                    except:
+                        await message.channel.send(f"{message.author.mention}", embed=error_embed, delete_after=10)
+                    print(f"🗑️ Deleted message from {message.author.display_name}: same user can't count twice in a row")
+                except Exception as e:
+                    print(f"❌ Error deleting message or sending ephemeral message: {e}")
+                return
+            
+            # Correct number! Add checkmark and update count
+            try:
+                await message.add_reaction('✅')
+                self.current_count = number
+                self.last_user_id = message.author.id
+                self.last_message_id = message.id  # Store the message ID
+                print(f"✅ Valid count {number} by {message.author.display_name}")
+                
+                # Update voice stats immediately after valid count
+                voice_stats_cog = self.bot.get_cog('VoiceStatsCog')
+                if voice_stats_cog:
+                    await voice_stats_cog.update_all_voice_stats()
+                    print(f"🔊 Voice stats updated after count {number}")
+            except Exception as e:
+                print(f"❌ Error adding reaction or updating voice stats: {e}")
+        
+        else:
+            # Wrong number, delete message but DON'T reset count
+            try:
+                await message.delete()
+                # Send ephemeral error message
+                error_embed = discord.Embed(
+                    title="❌ Wrong Number",
+                    description=f"Your number {number} was wrong. The next number should be {expected_number}.",
+                    color=0xff0000
+                )
+                # Try to send as ephemeral reply, fallback to delete_after
+                try:
+                    if hasattr(message, 'reply'):
+                        await message.reply(embed=error_embed, ephemeral=True, delete_after=10)
+                    else:
+                        await message.channel.send(f"{message.author.mention}", embed=error_embed, delete_after=10)
+                except:
+                    await message.channel.send(f"{message.author.mention}", embed=error_embed, delete_after=10)
+                print(f"🗑️ Deleted wrong number from {message.author.display_name}: {number} (expected {expected_number})")
+                # DON'T reset count - just continue with the current count
+            except Exception as e:
+                print(f"❌ Error deleting message or sending ephemeral message: {e}")
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
