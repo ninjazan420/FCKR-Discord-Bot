@@ -13,6 +13,7 @@ class ColorRolesCog(commands.Cog):
         # Store message IDs dynamically (created at startup)
         self.color_message_ids = []
         self.user_cooldowns = {}  # Store user cooldowns for color role changes
+        self.role_update_locks = {} # To prevent race conditions
         
         # 30 gradient colors from red to purple
         self.color_palette = [
@@ -193,6 +194,99 @@ class ColorRolesCog(commands.Cog):
         
         print(f"🎨 Color roles channel setup complete! Created {len(self.color_message_ids)} messages")
         print(f"📍 Message IDs: {self.color_message_ids}")
+
+    @commands.Cog.listener()
+    async def on_raw_reaction_add(self, payload):
+        """Handle reaction-based role assignments on specified messages."""
+        # Ignore reactions from the bot itself
+        if payload.user_id == self.bot.user.id:
+            return
+
+        # Check if the reaction is on one of the color role messages
+        if payload.message_id not in self.color_message_ids:
+            return
+
+        # Check if the event is in the correct server
+        if payload.guild_id != self.fckr_server_id:
+            return
+
+        guild = self.bot.get_guild(payload.guild_id)
+        if not guild:
+            return
+
+        member = guild.get_member(payload.user_id)
+        if not member:
+            return
+
+        # Prevent race conditions for the same user
+        if member.id in self.role_update_locks and self.role_update_locks[member.id]:
+            return  # Another update is in progress
+        self.role_update_locks[member.id] = True
+
+        try:
+            # Cooldown check
+            now = time.time()
+            if member.id in self.user_cooldowns and now - self.user_cooldowns[member.id] < 5:
+                # Send ephemeral cooldown message
+                channel = self.bot.get_channel(payload.channel_id)
+                if channel:
+                    await channel.send(f"{member.mention}, please wait a moment before changing colors again.", delete_after=5)
+                return
+            self.user_cooldowns[member.id] = now
+
+            # Map emoji to role index
+            number_emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
+            try:
+                emoji_index = number_emojis.index(str(payload.emoji))
+            except ValueError:
+                return # Not a valid number emoji
+
+            # Determine which message was reacted to and calculate role index
+            message_index = self.color_message_ids.index(payload.message_id)
+            role_index = message_index * 10 + emoji_index
+
+            if role_index >= len(self.color_names):
+                return # Invalid index
+
+            role_name = self.color_names[role_index]
+            role_to_assign = discord.utils.get(guild.roles, name=role_name)
+
+            if not role_to_assign:
+                print(f"❌ Role '{role_name}' not found in server.")
+                return
+
+            # Get all color roles for easy removal
+            all_color_roles = [r for r in guild.roles if r.name in self.color_names]
+            member_color_roles = [r for r in member.roles if r in all_color_roles]
+
+            channel = self.bot.get_channel(payload.channel_id)
+
+            # If user already has the role, remove it (toggle off)
+            if role_to_assign in member.roles:
+                await member.remove_roles(role_to_assign, reason="Toggled color role off")
+                if channel:
+                    await channel.send(f"{member.mention}, your color role **{role_name}** has been removed.", delete_after=7)
+                print(f"🎨 Removed color role '{role_name}' from {member.display_name}")
+            else:
+                # Remove all other color roles first
+                if member_color_roles:
+                    await member.remove_roles(*member_color_roles, reason="Changing color role")
+                
+                # Add the new role
+                await member.add_roles(role_to_assign, reason="Selected new color role")
+                if channel:
+                    await channel.send(f"{member.mention}, you've been given the **{role_name}** color!", delete_after=7)
+                print(f"🎨 Assigned color role '{role_name}' to {member.display_name}")
+
+        finally:
+            # Remove the reaction to keep the message clean
+            channel = self.bot.get_channel(payload.channel_id)
+            if channel:
+                message = await channel.fetch_message(payload.message_id)
+                await message.remove_reaction(payload.emoji, member)
+            
+            # Release the lock
+            self.role_update_locks[member.id] = False
     
     async def verify_color_role_positions(self, guild, fckr_role):
         """Verify that all color roles are positioned above the FCKR role"""

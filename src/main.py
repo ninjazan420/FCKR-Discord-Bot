@@ -27,6 +27,7 @@ async def setup_cogs():
     from color_roles import ColorRolesCog
     from changelog import ChangelogCog
     from counting import CountingCog
+    from cats import Cats
     
     # Add cogs to bot
     await bot.add_cog(HelpCog(bot))
@@ -36,13 +37,14 @@ async def setup_cogs():
     await bot.add_cog(ColorRolesCog(bot))
     await bot.add_cog(ChangelogCog(bot))
     await bot.add_cog(CountingCog(bot))
+    await bot.add_cog(Cats(bot))
     print("✅ All cogs loaded successfully")
 
 @bot.event
 async def on_ready():
     # Startup logging with timestamp and version
     timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    version = "1.0.8"
+    version = "1.1.0"
     
     # ASCII Art for console
     ascii_art = """

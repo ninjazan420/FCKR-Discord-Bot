@@ -12,6 +12,7 @@ class CountingCog(commands.Cog):
         self.counting_channel_id = int(os.getenv('COUNTING_CHANNEL_ID', 0))
         self.current_count = 0
         self.last_user_id = None
+        self.last_message_id = None  # Add this line
         self.initialized = False
         
     @commands.Cog.listener()
@@ -125,6 +126,39 @@ class CountingCog(commands.Cog):
                 print(f"🗑️ Deleted non-numeric message from {message.author.display_name}: {message.content[:50]}")
             except Exception as e:
                 print(f"❌ Error deleting message or sending ephemeral message: {e}")
+
+    @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        """Handle deleted counting messages"""
+        # Skip if not in counting channel or from bot
+        if (message.channel.id != self.counting_channel_id or 
+            message.author.bot or 
+            message.guild.id != self.fckr_server_id):
+            return
+
+        # Check if the deleted message was the last valid count
+        if message.id == self.last_message_id:
+            # To be safe, re-fetch the last valid count before the deleted one
+            await self.initialize_counting()
+
+            deleted_number = self.current_count
+            next_number = self.current_count + 1
+
+            counting_channel = self.bot.get_channel(self.counting_channel_id)
+            if counting_channel:
+                embed = discord.Embed(
+                    title="🔢 Count Interrupted",
+                    description=f"A message by **{message.author.display_name}** with the number **{deleted_number}** was deleted.",
+                    color=0xffa500, # Orange
+                    timestamp=datetime.now()
+                )
+                embed.add_field(name="Last Correct Number", value=str(self.current_count), inline=True)
+                embed.add_field(name="Next Number", value=str(next_number), inline=True)
+                embed.set_footer(text="Please continue counting from the next number.")
+
+                await counting_channel.send(embed=embed)
+                print(f"ℹ️ A deleted message was handled. Last count was {self.current_count}, next is {next_number}.")
+
             return
         
         # Check if it's the correct next number
@@ -159,6 +193,7 @@ class CountingCog(commands.Cog):
                 await message.add_reaction('✅')
                 self.current_count = number
                 self.last_user_id = message.author.id
+                self.last_message_id = message.id  # Store the message ID
                 print(f"✅ Valid count {number} by {message.author.display_name}")
                 
                 # Update voice stats immediately after valid count

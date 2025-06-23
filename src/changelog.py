@@ -8,8 +8,42 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
+            "1.1.0": {
+                "date": "19 June 2025",
+                "title": "🐾 Welcome Cats & API Integration",
+                "features": [
+                    "Added an automatic welcome message for new members with a cute cat GIF from cataas API",
+                    "Welcome embed includes links to rules, roles, and levels channels",
+                    "User is pinged in the join log channel for a warm welcome"
+                ],
+                "fixes": [],
+                "technical": [
+                    "Created a new `cats.py` cog to handle the `on_member_join` event",
+                    "Integrated `requests` to fetch data from the `cataas.com` API",
+                    "Added `JOIN_LOG_CHANNEL` to environment variables for configuration",
+                    "The color of the embed is randomized for a bit of fun"
+                ]
+            },
+            "1.0.9": {
+                "date": "18 June 2025",
+                "title": "⚙️ Self-Check & Stability Enhancements",
+                "features": [
+                    "Added a self-check system that runs every 5 minutes to ensure cogs are initialized",
+                    "Implemented a command anti-spam mechanism to prevent bot freezes",
+                    "Replaced deleted counting messages with an informational embed"
+                ],
+                "fixes": [
+                    "Reduced console noise by removing non-error feedback from the self-check system",
+                    "Improved handling of deleted counting messages to maintain count integrity"
+                ],
+                "technical": [
+                    "Created SelfCheckCog in admin/selfcheck.py with a 5-minute task loop",
+                    "Added on_message_delete listener to CountingCog to handle deleted valid counts",
+                    "Refined logging to only show warnings and errors for better monitoring"
+                ]
+            },
             "1.0.8": {
-                "date": "14 June 2025",
+                "date": "16 June 2025",
                 "title": "🔊 Live Voice Stats Updates",
                 "features": [
                     "Voice channel statistics now update automatically when valid counting numbers are posted",

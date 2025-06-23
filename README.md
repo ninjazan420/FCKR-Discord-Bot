@@ -1,4 +1,4 @@
-# FCKR-Discord-Bot 1.0.8
+# FCKR-Discord-Bot 1.0.9
 
 ```
 ▄████  ▄█▄    █  █▀ █▄▄▄▄ 
@@ -14,7 +14,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 
 ## 📋 Table of Contents
 
-- [FCKR-Discord-Bot 1.0.8](#fckr-discord-bot-108)
+- [FCKR-Discord-Bot 1.0.9](#fckr-discord-bot-109)
 - [FCKR-Discord-Bot 1.0.7](#fckr-discord-bot-107)
   - [📋 Table of Contents](#-table-of-contents)
   - [✨ Features](#-features)
@@ -164,7 +164,7 @@ FCKR-Discord-Bot/
 ## 📈 Version History
 
 <details open>
-<summary><strong>Version 1.0.8</strong> (Current) - 🔊 Live Voice Stats Updates</summary>
+<summary><strong>Version 1.0.9</strong> (Current) - ⚙️ Self-Check & Stability Enhancements</summary>
 
 **Release Date:** 14 June 2025
 
