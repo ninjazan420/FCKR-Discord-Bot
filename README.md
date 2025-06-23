@@ -1,4 +1,4 @@
-# FCKR-Discord-Bot 1.0.9
+# FCKR-Discord-Bot 1.1.0
 
 ```
 ▄████  ▄█▄    █  █▀ █▄▄▄▄ 
@@ -14,8 +14,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 
 ## 📋 Table of Contents
 
-- [FCKR-Discord-Bot 1.0.9](#fckr-discord-bot-109)
-- [FCKR-Discord-Bot 1.0.7](#fckr-discord-bot-107)
+- [FCKR-Discord-Bot 1.1.0](#fckr-discord-bot-110)
   - [📋 Table of Contents](#-table-of-contents)
   - [✨ Features](#-features)
   - [🚀 Quick Start](#-quick-start)
@@ -40,6 +39,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 - **📋 Changelog System**: Complete version history and update tracking
 - **🧩 Modular Architecture**: Clean cog-based structure for easy maintenance and expansion
 - **🐳 Docker Support**: Ready-to-deploy containerized setup
+- **🐾 Automatic Welcome Messages**: Greets new members with a random cat GIF and server information.
 - **📝 Comprehensive Logging**: Startup logging with timestamps and bot activity tracking
 
 ## 🚀 Quick Start
@@ -142,6 +142,7 @@ FCKR-Discord-Bot/
 │   │   ├── purge.py         # Message purge system
 │   │   ├── system_stats.py  # System statistics
 │   │   └── voice_stats.py   # Voice channel stats
+│   ├── cats.py              # Welcome message system
 │   ├── changelog.py         # Version history
 │   ├── color_roles.py       # Color role system
 │   ├── main.py             # Bot entry point
@@ -160,27 +161,46 @@ FCKR-Discord-Bot/
 | `BOT_LOGGING` | Channel ID for bot logging | ✅ |
 | `ROLES_CHANNEL_ID` | Channel ID for color role selection | ✅ |
 | `COUNTING_CHANNEL_ID` | Channel ID for counting game | ✅ |
+| `JOIN_LOG_CHANNEL` | Channel ID for welcome messages | ✅ |
 
 ## 📈 Version History
 
 <details open>
-<summary><strong>Version 1.0.9</strong> (Current) - ⚙️ Self-Check & Stability Enhancements</summary>
+<summary><strong>Version 1.1.0</strong> (Current) - 🐾 Welcome Cats & API Integration</summary>
 
-**Release Date:** 14 June 2025
+**Release Date:** 23 June 2025
 
 **🆕 New Features:**
-- Voice channel statistics now update automatically when valid counting numbers are posted
-- Real-time counting display in voice channels without manual refresh
-- Seamless integration between counting system and voice stats
-
-**🐛 Bug Fixes:**
-- Eliminated need for manual !fckr refresh after counting
-- Improved user experience with instant stat updates
+- Added an automatic welcome message for new members with a cute cat GIF from cataas API.
+- Welcome embed includes links to rules, roles, and levels channels.
+- User is pinged in the join log channel for a warm welcome.
 
 **🔧 Technical Changes:**
-- Added voice stats update call to counting validation in counting.py
-- Integrated VoiceStatsCog.update_all_voice_stats() into counting workflow
-- Enhanced error handling for voice stats updates
+- Created a new `cats.py` cog to handle the `on_member_join` event.
+- Integrated `requests` to fetch data from the `cataas.com` API.
+- Added `JOIN_LOG_CHANNEL` to environment variables for configuration.
+- The color of the embed is randomized for a bit of fun.
+
+</details>
+
+<details>
+<summary><strong>Version 1.0.9</strong> - ⚙️ Self-Check & Stability Enhancements</summary>
+
+**Release Date:** 18 June 2025
+
+**🆕 New Features:**
+- Added a self-check system that runs every 5 minutes to ensure cogs are initialized
+- Implemented a command anti-spam mechanism to prevent bot freezes
+- Replaced deleted counting messages with an informational embed
+
+**🐛 Bug Fixes:**
+- Reduced console noise by removing non-error feedback from the self-check system
+- Improved handling of deleted counting messages to maintain count integrity
+
+**🔧 Technical Changes:**
+- Created SelfCheckCog in admin/selfcheck.py with a 5-minute task loop
+- Added on_message_delete listener to CountingCog to handle deleted valid counts
+- Refined logging to only show warnings and errors for better monitoring
 
 </details>
 
