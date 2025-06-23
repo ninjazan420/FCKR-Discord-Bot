@@ -13,7 +13,9 @@ class HelpCog(commands.Cog):
         """Display help information for the FCKR Discord Bot"""
         
         # Check if user has admin permissions
-        is_admin = ctx.author.guild_permissions.administrator
+        admin_cog = self.bot.get_cog('AdminManagerCog')
+        is_bot_admin = await admin_cog.is_bot_admin(ctx.author.id)
+        is_admin = ctx.author.guild_permissions.administrator or is_bot_admin
         
         # Get system stats
         cpu_percent = psutil.cpu_percent(interval=1)
@@ -44,7 +46,10 @@ class HelpCog(commands.Cog):
             "`!fckr neofetch` - Show detailed system stats (Admin only)\n"
             "`!fckr count` - Show counting status (Admin only)\n"
             "`!fckr reset_count [number]` - Reset counting (Admin only)\n"
-            "`!fckr purge [amount]` - Delete specified number of messages (Admin only)"
+            "`!fckr purge [amount]` - Delete specified number of messages (Admin only)\n"
+            "`!fckr admin add [user]` - Add a bot admin (Admin only)\n"
+            "`!fckr admin rm [user]` - Remove a bot admin (Admin only)\n"
+            "`!fckr admin list` - List bot admins (Admin only)"
         )
         
         # Show commands based on permissions

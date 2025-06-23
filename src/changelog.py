@@ -8,6 +8,23 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
+            "1.2.0": {
+                "date": "24 June 2025",
+                "title": "👑 Bot Admin Management System",
+                "features": [
+                    "Added `!fckr admin add [user]` to grant bot admin privileges",
+                    "Added `!fckr admin rm [user]` to revoke bot admin privileges",
+                    "Added `!fckr admin list` to display all bot admins",
+                    "Bot admins can now use all administrative commands"
+                ],
+                "fixes": [],
+                "technical": [
+                    "Created AdminManagerCog in `admin/addAdmin.py`",
+                    "Admins are stored in `data/admins.json`",
+                    "Integrated bot admin check into help command and other admin commands",
+                    "Updated Docker configuration to persist admin data"
+                ]
+            },
             "1.1.1": {
                 "date": "23 June 2025",
                 "title": "🐱 Welcome Message Improvements & Bug Fixes",

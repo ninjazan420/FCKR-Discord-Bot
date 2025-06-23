@@ -5,4 +5,4 @@ services:
       - .env
     restart: unless-stopped
     volumes:
-      - ./data:/app/data  # Persistent data storage
+      - ./src/data:/app/data  # Persistent data storage

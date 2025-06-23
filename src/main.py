@@ -104,6 +104,7 @@ if __name__ == '__main__':
         from changelog import ChangelogCog
         from counting import CountingCog
         from cats import Cats
+        from admin.addAdmin import AdminManagerCog
         
         # Add cogs to bot
         await bot.add_cog(HelpCog(bot))
@@ -114,6 +115,7 @@ if __name__ == '__main__':
         await bot.add_cog(ChangelogCog(bot))
         await bot.add_cog(CountingCog(bot))
         await bot.add_cog(Cats(bot))
+        await bot.add_cog(AdminManagerCog(bot))
         print("✅ All cogs loaded successfully")
         
         # Run the bot

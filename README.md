@@ -1,4 +1,4 @@
-# FCKR-Discord-Bot 1.1.1
+# FCKR-Discord-Bot 1.2.0
 
 ```
 ▄████  ▄█▄    █  █▀ █▄▄▄▄ 
@@ -96,6 +96,9 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 | `!fckr count` | Show current counting status | Administrator |
 | `!fckr reset_count [number]` | Reset counting to specified number | Administrator |
 | `!fckr purge [amount]` | Delete specified number of messages (1-100) | Administrator |
+| `!fckr admin add [user]` | Add a bot admin | Administrator |
+| `!fckr admin rm [user]` | Remove a bot admin | Administrator |
+| `!fckr admin list` | List bot admins | Administrator |
 
 ## 💻 Development
 
