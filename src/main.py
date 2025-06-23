@@ -24,7 +24,7 @@ bot = commands.Bot(command_prefix='!fckr ', intents=intents, help_command=None)
 async def on_ready():
     # Startup logging with timestamp and version
     timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    version = "1.2.1"
+    version = "1.2.2"
     
     # ASCII Art for console
     ascii_art = """
@@ -105,6 +105,7 @@ if __name__ == '__main__':
         from counting import CountingCog
         from cats import Cats
         from admin.addAdmin import AdminManagerCog
+        from aww import AwwCog
         
         # Add cogs to bot
         await bot.add_cog(HelpCog(bot))
@@ -116,6 +117,7 @@ if __name__ == '__main__':
         await bot.add_cog(CountingCog(bot))
         await bot.add_cog(Cats(bot))
         await bot.add_cog(AdminManagerCog(bot))
+        await bot.add_cog(AwwCog(bot))
         print("✅ All cogs loaded successfully")
         
         # Run the bot

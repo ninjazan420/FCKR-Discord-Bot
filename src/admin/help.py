@@ -37,6 +37,7 @@ class HelpCog(commands.Cog):
             "`!fckr help` - Show this help message\n"
             "`!fckr stats` - Show server statistics\n"
             "`!fckr colors` - Setup color role selection\n"
+            "`!fckr aww` - Get a random cute cat image\n"
             "`!fckr changelog` - Show recent updates"
         )
         

@@ -14,7 +14,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 
 ## 📋 Table of Contents
 
-- [FCKR-Discord-Bot 1.1.1](#fckr-discord-bot-111)
+- [FCKR-Discord-Bot 1.2.2](#fckr-discord-bot-122)
   - [📋 Table of Contents](#-table-of-contents)
   - [✨ Features](#-features)
   - [🚀 Quick Start](#-quick-start)
@@ -39,7 +39,8 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 - **📋 Changelog System**: Complete version history and update tracking
 - **🧩 Modular Architecture**: Clean cog-based structure for easy maintenance and expansion
 - **🐳 Docker Support**: Ready-to-deploy containerized setup
-- **🐾 Automatic Welcome Messages**: Greets new members with a random cat GIF and server information.
+- **🐾 Automatic Welcome Messages**: Greets new members with a random cat GIF and server information
+- **🐱 Random Cat Images**: `!fckr aww` command provides cute cat images from cataas.com with ASCII art
 - **📝 Comprehensive Logging**: Startup logging with timestamps and bot activity tracking
 
 ## 🚀 Quick Start
@@ -86,6 +87,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 | `!fckr stats` | Show current server statistics |
 | `!fckr colors` | Get color roles in the designated channel |
 | `!fckr changelog [version]` | View bot version history |
+| `!fckr aww` | Get a random cute cat image with ASCII art |
 
 ### Admin Commands
 | Command | Description | Permission |

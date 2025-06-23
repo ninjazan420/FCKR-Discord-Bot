@@ -8,8 +8,43 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
+            "1.2.2": {
+                "date": "23 June 2025",
+                "title": "🐱 Random Cat Images & Aww Command",
+                "features": [
+                    "Added `!fckr aww` command to get random cat images from cataas.com",
+                    "Integrated rate limiting (5 seconds cooldown) for aww command",
+                    "Random cat ASCII art displayed with each aww command",
+                    "Support for both static images and GIFs from cataas API"
+                ],
+                "fixes": [],
+                "technical": [
+                    "Created AwwCog in `aww.py` with aiohttp for API requests",
+                    "Implemented user-based cooldown system with datetime tracking",
+                    "Added multiple cataas.com endpoints for image variety",
+                    "Integrated aww command into help system and main bot loader"
+                ]
+            },
+            "1.2.1": {
+                "date": "23 June 2025",
+                "title": "🔧 Admin Permission Extensions",
+                "features": [
+                    "Extended admin checks to include bot admin status across all cogs",
+                    "Bot admins can now access all administrative commands",
+                    "Unified permission system between guild admins and bot admins"
+                ],
+                "fixes": [
+                    "Fixed admin permission checks in multiple cogs",
+                    "Improved consistency of admin access across all modules"
+                ],
+                "technical": [
+                    "Modified admin permission checks in help.py and other admin cogs",
+                    "Integrated AdminManagerCog.is_bot_admin() checks throughout codebase",
+                    "Updated version numbering system for better tracking"
+                ]
+            },
             "1.2.0": {
-                "date": "24 June 2025",
+                "date": "23 June 2025",
                 "title": "👑 Bot Admin Management System",
                 "features": [
                     "Added `!fckr admin add [user]` to grant bot admin privileges",
