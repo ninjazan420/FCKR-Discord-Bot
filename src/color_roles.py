@@ -476,9 +476,17 @@ class ColorRolesCog(commands.Cog):
                 pass
     
     @commands.command(name='colors')
-    @commands.has_permissions(administrator=True)
     async def colors_command(self, ctx):
         """Admin command to direct users to the color roles channel"""
+        # Check if user has admin permissions
+        admin_cog = self.bot.get_cog('AdminManagerCog')
+        is_bot_admin = await admin_cog.is_bot_admin(ctx.author.id) if admin_cog else False
+        is_admin = ctx.author.guild_permissions.administrator or is_bot_admin
+        
+        if not is_admin:
+            await ctx.send("❌ You need administrator permissions to use this command.", delete_after=10)
+            return
+            
         embed = discord.Embed(
             title="🎨 Color Roles",
             description=f"Head over to <#{self.roles_channel_id}> to choose your username color!\n\n"
@@ -490,9 +498,17 @@ class ColorRolesCog(commands.Cog):
         await ctx.send(embed=embed)
     
     @commands.command(name='setup_colors')
-    @commands.has_permissions(administrator=True)
     async def setup_colors_command(self, ctx):
         """Admin command to manually setup color roles"""
+        # Check if user has admin permissions
+        admin_cog = self.bot.get_cog('AdminManagerCog')
+        is_bot_admin = await admin_cog.is_bot_admin(ctx.author.id) if admin_cog else False
+        is_admin = ctx.author.guild_permissions.administrator or is_bot_admin
+        
+        if not is_admin:
+            await ctx.send("❌ You need administrator permissions to use this command.", delete_after=10)
+            return
+            
         await ctx.send("🎨 Setting up color roles...")
         await self.setup_color_roles()
         await self.setup_roles_channel()

@@ -218,9 +218,17 @@ class VoiceStatsCog(commands.Cog):
         await ctx.send(embed=embed)
     
     @commands.command(name='refresh')
-    @commands.has_permissions(administrator=True)
     async def refresh_stats(self, ctx):
         """Manually refresh voice channel statistics (Admin only)"""
+        # Check if user has admin permissions
+        admin_cog = self.bot.get_cog('AdminManagerCog')
+        is_bot_admin = await admin_cog.is_bot_admin(ctx.author.id) if admin_cog else False
+        is_admin = ctx.author.guild_permissions.administrator or is_bot_admin
+        
+        if not is_admin:
+            await ctx.send("❌ You need administrator permissions to use this command.", delete_after=10)
+            return
+            
         if ctx.guild.id != self.fckr_server_id:
             await ctx.send("❌ This command can only be used on the FCKR server.")
             return

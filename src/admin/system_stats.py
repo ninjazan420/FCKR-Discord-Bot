@@ -12,9 +12,17 @@ class SystemStatsCog(commands.Cog):
         self.start_time = datetime.now()
     
     @commands.command(name='neofetch')
-    @commands.has_permissions(administrator=True)
     async def fckr_neofetch(self, ctx):
         """Admin command for FCKR system statistics"""
+        # Check if user has admin permissions
+        admin_cog = self.bot.get_cog('AdminManagerCog')
+        is_bot_admin = await admin_cog.is_bot_admin(ctx.author.id) if admin_cog else False
+        is_admin = ctx.author.guild_permissions.administrator or is_bot_admin
+        
+        if not is_admin:
+            await ctx.send("❌ You need administrator permissions to use this command.", delete_after=10)
+            return
+            
         await self.show_system_stats(ctx)
     
     async def show_system_stats(self, ctx):

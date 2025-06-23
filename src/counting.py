@@ -295,9 +295,17 @@ class CountingCog(commands.Cog):
                 print(f"❌ Error deleting message or sending ephemeral message: {e}")
     
     @commands.command(name='count')
-    @commands.has_permissions(administrator=True)
     async def count_status(self, ctx):
         """Show current counting status (Admin only)"""
+        # Check if user has admin permissions
+        admin_cog = self.bot.get_cog('AdminManagerCog')
+        is_bot_admin = await admin_cog.is_bot_admin(ctx.author.id) if admin_cog else False
+        is_admin = ctx.author.guild_permissions.administrator or is_bot_admin
+        
+        if not is_admin:
+            await ctx.send("❌ You need administrator permissions to use this command.", delete_after=10)
+            return
+            
         if ctx.guild.id != self.fckr_server_id:
             await ctx.send("❌ This command can only be used on the FCKR server.")
             return
@@ -329,9 +337,17 @@ class CountingCog(commands.Cog):
             await ctx.send(embed=embed)
     
     @commands.command(name='reset_count')
-    @commands.has_permissions(administrator=True)
     async def reset_count(self, ctx, new_count: int = 0):
         """Reset the counting to a specific number (Admin only)"""
+        # Check if user has admin permissions
+        admin_cog = self.bot.get_cog('AdminManagerCog')
+        is_bot_admin = await admin_cog.is_bot_admin(ctx.author.id) if admin_cog else False
+        is_admin = ctx.author.guild_permissions.administrator or is_bot_admin
+        
+        if not is_admin:
+            await ctx.send("❌ You need administrator permissions to use this command.", delete_after=10)
+            return
+            
         if ctx.guild.id != self.fckr_server_id:
             await ctx.send("❌ This command can only be used on the FCKR server.")
             return

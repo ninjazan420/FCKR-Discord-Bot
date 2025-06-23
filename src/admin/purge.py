@@ -11,7 +11,11 @@ class PurgeCog(commands.Cog):
         """Purge messages from the current channel (Admin only)"""
         
         # Check if user has admin permissions
-        if not ctx.author.guild_permissions.administrator:
+        admin_cog = self.bot.get_cog('AdminManagerCog')
+        is_bot_admin = await admin_cog.is_bot_admin(ctx.author.id) if admin_cog else False
+        is_admin = ctx.author.guild_permissions.administrator or is_bot_admin
+        
+        if not is_admin:
             embed = discord.Embed(
                 title="❌ Access Denied",
                 description="You need administrator permissions to use this command.",

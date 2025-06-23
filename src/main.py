@@ -24,7 +24,7 @@ bot = commands.Bot(command_prefix='!fckr ', intents=intents, help_command=None)
 async def on_ready():
     # Startup logging with timestamp and version
     timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    version = "1.2.0"
+    version = "1.2.1"
     
     # ASCII Art for console
     ascii_art = """
