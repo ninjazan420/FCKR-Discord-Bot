@@ -8,6 +8,26 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
+            "1.1.1": {
+                "date": "23 June 2025",
+                "title": "🐱 Welcome Message Improvements & Bug Fixes",
+                "features": [
+                    "Added multiple random ASCII cat images to welcome messages for variety",
+                    "Added links to server tag instructions and color selection guide",
+                    "Enhanced welcome embed with comprehensive server navigation links"
+                ],
+                "fixes": [
+                    "Fixed welcome message image display issues by removing problematic cat API integration",
+                    "Removed excessive logging and debug messages from welcome system",
+                    "Simplified welcome message logic for better reliability"
+                ],
+                "technical": [
+                    "Replaced cat API with 15 different ASCII cat art variations",
+                    "Added RULES_CHANNEL_ID, RANKING_CHANNEL_ID, SERVERTAG_CHANNEL_ID, and COLORS_CHANNEL_ID environment variables",
+                    "Cleaned up cats.py code by removing unused imports and debug statements",
+                    "Improved error handling in welcome message system"
+                ]
+            },
             "1.1.0": {
                 "date": "19 June 2025",
                 "title": "🐾 Welcome Cats & API Integration",

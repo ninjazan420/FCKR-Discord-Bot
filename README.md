@@ -1,4 +1,4 @@
-# FCKR-Discord-Bot 1.1.0
+# FCKR-Discord-Bot 1.1.1
 
 ```
 ▄████  ▄█▄    █  █▀ █▄▄▄▄ 
@@ -14,7 +14,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 
 ## 📋 Table of Contents
 
-- [FCKR-Discord-Bot 1.1.0](#fckr-discord-bot-110)
+- [FCKR-Discord-Bot 1.1.1](#fckr-discord-bot-111)
   - [📋 Table of Contents](#-table-of-contents)
   - [✨ Features](#-features)
   - [🚀 Quick Start](#-quick-start)
@@ -166,20 +166,43 @@ FCKR-Discord-Bot/
 ## 📈 Version History
 
 <details open>
-<summary><strong>Version 1.1.0</strong> (Current) - 🐾 Welcome Cats & API Integration</summary>
+<summary><strong>Version 1.1.1</strong> (Current) - 🐱 Welcome Message Improvements & Bug Fixes</summary>
 
-**Release Date:** 23 June 2025
+**Release Date:** 19 June 2025
 
 **🆕 New Features:**
-- Added an automatic welcome message for new members with a cute cat GIF from cataas API.
-- Welcome embed includes links to rules, roles, and levels channels.
-- User is pinged in the join log channel for a warm welcome.
+- Added multiple random ASCII cat images to welcome messages for variety
+- Added links to server tag instructions and color selection guide
+- Enhanced welcome embed with comprehensive server navigation links
+
+**🐛 Bug Fixes:**
+- Fixed welcome message image display issues by removing problematic cat API integration
+- Removed excessive logging and debug messages from welcome system
+- Simplified welcome message logic for better reliability
 
 **🔧 Technical Changes:**
-- Created a new `cats.py` cog to handle the `on_member_join` event.
-- Integrated `requests` to fetch data from the `cataas.com` API.
-- Added `JOIN_LOG_CHANNEL` to environment variables for configuration.
-- The color of the embed is randomized for a bit of fun.
+- Replaced cat API with 15 different ASCII cat art variations
+- Added RULES_CHANNEL_ID, RANKING_CHANNEL_ID, SERVERTAG_CHANNEL_ID, and COLORS_CHANNEL_ID environment variables
+- Cleaned up cats.py code by removing unused imports and debug statements
+- Improved error handling in welcome message system
+
+</details>
+
+<details>
+<summary><strong>Version 1.1.0</strong> - 🐾 Welcome Cats & API Integration</summary>
+
+**Release Date:** 19 June 2025
+
+**🆕 New Features:**
+- Added an automatic welcome message for new members with a cute cat GIF from cataas API
+- Welcome embed includes links to rules, roles, and levels channels
+- User is pinged in the join log channel for a warm welcome
+
+**🔧 Technical Changes:**
+- Created a new `cats.py` cog to handle the `on_member_join` event
+- Integrated `requests` to fetch data from the `cataas.com` API
+- Added `JOIN_LOG_CHANNEL` to environment variables for configuration
+- The color of the embed is randomized for a bit of fun
 
 </details>
 

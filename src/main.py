@@ -18,33 +18,13 @@ intents.reactions = True
 
 bot = commands.Bot(command_prefix='!fckr ', intents=intents, help_command=None)
 
-async def setup_cogs():
-    """Load all cogs asynchronously"""
-    from admin.help import HelpCog
-    from admin.voice_stats import VoiceStatsCog
-    from admin.system_stats import SystemStatsCog
-    from admin.purge import PurgeCog
-    from color_roles import ColorRolesCog
-    from changelog import ChangelogCog
-    from counting import CountingCog
-    from cats import Cats
-    
-    # Add cogs to bot
-    await bot.add_cog(HelpCog(bot))
-    await bot.add_cog(VoiceStatsCog(bot))
-    await bot.add_cog(SystemStatsCog(bot))
-    await bot.add_cog(PurgeCog(bot))
-    await bot.add_cog(ColorRolesCog(bot))
-    await bot.add_cog(ChangelogCog(bot))
-    await bot.add_cog(CountingCog(bot))
-    await bot.add_cog(Cats(bot))
-    print("✅ All cogs loaded successfully")
+
 
 @bot.event
 async def on_ready():
     # Startup logging with timestamp and version
     timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    version = "1.1.0"
+    version = "1.1.1"
     
     # ASCII Art for console
     ascii_art = """
@@ -115,8 +95,26 @@ if __name__ == '__main__':
     import asyncio
     
     async def main():
-        # Setup cogs first
-        await setup_cogs()
+        # Load cogs
+        from admin.help import HelpCog
+        from admin.voice_stats import VoiceStatsCog
+        from admin.system_stats import SystemStatsCog
+        from admin.purge import PurgeCog
+        from color_roles import ColorRolesCog
+        from changelog import ChangelogCog
+        from counting import CountingCog
+        from cats import Cats
+        
+        # Add cogs to bot
+        await bot.add_cog(HelpCog(bot))
+        await bot.add_cog(VoiceStatsCog(bot))
+        await bot.add_cog(SystemStatsCog(bot))
+        await bot.add_cog(PurgeCog(bot))
+        await bot.add_cog(ColorRolesCog(bot))
+        await bot.add_cog(ChangelogCog(bot))
+        await bot.add_cog(CountingCog(bot))
+        await bot.add_cog(Cats(bot))
+        print("✅ All cogs loaded successfully")
         
         # Run the bot
         token = os.getenv('DISCORD_API_TOKEN')
