@@ -6,6 +6,9 @@ from datetime import datetime
 import psutil
 import platform
 
+# Import AI Chatbot functionality
+from ai_chatbot import register_ai_chatbot_commands, handle_ai_chatbot_message
+
 # Load environment variables
 load_dotenv()
 
@@ -18,13 +21,27 @@ intents.reactions = True
 
 bot = commands.Bot(command_prefix='!fckr ', intents=intents, help_command=None)
 
+# Initialize AI Chatbot
+bot.logging_channel = int(os.getenv('BOT_LOGGING', 0))  # Set logging channel for AI chatbot
+register_ai_chatbot_commands(bot)
 
+@bot.event
+async def on_message(message):
+    # Ignore messages from the bot itself
+    if message.author == bot.user:
+        return
+    
+    # Handle AI Chatbot messages (mentions only, no DMs)
+    await handle_ai_chatbot_message(bot, message)
+    
+    # Process other commands
+    await bot.process_commands(message)
 
 @bot.event
 async def on_ready():
     # Startup logging with timestamp and version
     timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    version = "1.2.2"
+    version = "1.3.0"
     
     # ASCII Art for console
     ascii_art = """

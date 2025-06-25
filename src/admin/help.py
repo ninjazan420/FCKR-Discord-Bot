@@ -38,7 +38,10 @@ class HelpCog(commands.Cog):
             "`!fckr stats` - Show server statistics\n"
             "`!fckr colors` - Setup color role selection\n"
             "`!fckr aww` - Get a random cute cat image\n"
-            "`!fckr changelog` - Show recent updates"
+            "`!fckr changelog` - Show recent updates\n"
+            "`!fckr ai_stats` - Show AI chatbot statistics\n"
+            "`!fckr ai_memory` - Show your conversation history with the AI\n"
+            "`@FCKR mention` - Chat with the AI bot (mention required)"
         )
         
         # Admin commands (only shown to admins)
@@ -66,7 +69,7 @@ class HelpCog(commands.Cog):
         
         embed.add_field(
             name="Features",
-            value="• Automatic voice channel statistics\n• Server member tracking\n• Boost count tracking\n• Daily join statistics\n• Color role system with 30 gradient colors\n• Counting game with automatic validation",
+            value="• Automatic voice channel statistics\n• Server member tracking\n• Boost count tracking\n• Daily join statistics\n• Color role system with 30 gradient colors\n• Counting game with automatic validation\n• AI Chatbot with conversation memory and statistics\n• Rate-limited AI interactions (25 messages/hour)",
             inline=False
         )
         

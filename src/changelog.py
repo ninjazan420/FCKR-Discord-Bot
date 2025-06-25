@@ -8,6 +8,29 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
+            "1.3.0": {
+                "date": "26 June 2025",
+                "title": "🤖 AI Chatbot with Memory & Statistics",
+                "features": [
+                    "Added interactive AI chatbot with personality (Fckr Chan) - playfully dominant and teasing character",
+                    "Implemented conversation memory system that persists across bot restarts",
+                    "Added rate limiting system (25 messages per hour per user) to prevent spam",
+                    "Created `!fckr ai_stats` slash command to view chatbot usage statistics",
+                    "Created `!fckr ai_memory` slash command to view personal conversation history",
+                    "AI responds only to mentions, never to DMs for security",
+                    "Comprehensive logging of all AI interactions in Discord channels"
+                ],
+                "fixes": [],
+                "technical": [
+                    "Integrated OpenRouter API for AI responses using Llama 3.1 8B model",
+                    "Implemented session persistence with JSON file storage in `src/ai_chatbot/logs/`",
+                    "Created modular AI system with character data loaded from `data/ai_chatbot.json`",
+                    "Enhanced statistics tracking with user engagement metrics",
+                    "Added `OPENROUTER_KEY` environment variable requirement",
+                    "Built SessionManager class for conversation history and rate limiting",
+                    "Implemented AIChatbotClient class for API communication and response generation"
+                ]
+            },
             "1.2.2": {
                 "date": "23 June 2025",
                 "title": "🐱 Random Cat Images & Aww Command",
@@ -329,11 +352,20 @@ class ChangelogCog(commands.Cog):
         """Send detailed changelog for a specific version"""
         data = self.changelog_data[version]
         
+        # Parse date with flexible format handling
+        try:
+            if len(data["date"].split()) == 3:  # "23 June 2025"
+                timestamp = datetime.strptime(data["date"], "%d %B %Y")
+            else:  # "December 2024"
+                timestamp = datetime.strptime(data["date"], "%B %Y")
+        except ValueError:
+            timestamp = datetime.now()  # Fallback to current time
+        
         embed = discord.Embed(
             title=f"📋 Changelog - Version {version}",
             description=data["title"],
             color=0x00ff00,
-            timestamp=datetime.strptime(data["date"], "%d %B %Y")
+            timestamp=timestamp
         )
         
         # Features
@@ -374,10 +406,19 @@ class ChangelogCog(commands.Cog):
             color=0x00ff00
         )
         
-        # Sort versions by date (newest first)
+        # Sort versions by date (newest first) with flexible date parsing
+        def parse_date(date_str):
+            try:
+                if len(date_str.split()) == 3:  # "23 June 2025"
+                    return datetime.strptime(date_str, "%d %B %Y")
+                else:  # "December 2024"
+                    return datetime.strptime(date_str, "%B %Y")
+            except ValueError:
+                return datetime.now()  # Fallback
+        
         sorted_versions = sorted(
             self.changelog_data.items(),
-            key=lambda x: datetime.strptime(x[1]["date"], "%d %B %Y"),
+            key=lambda x: parse_date(x[1]["date"]),
             reverse=True
         )
         

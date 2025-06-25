@@ -14,7 +14,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 
 ## 📋 Table of Contents
 
-- [FCKR-Discord-Bot 1.2.2](#fckr-discord-bot-122)
+- [FCKR-Discord-Bot 1.2.0](#fckr-discord-bot-120)
   - [📋 Table of Contents](#-table-of-contents)
   - [✨ Features](#-features)
   - [🚀 Quick Start](#-quick-start)
@@ -171,7 +171,29 @@ FCKR-Discord-Bot/
 ## 📈 Version History
 
 <details open>
-<summary><strong>Version 1.1.1</strong> (Current) - 🐱 Welcome Message Improvements & Bug Fixes</summary>
+<summary><strong>Version 1.3.0</strong> (Current) - 🤖 AI Chatbot Integration</summary>
+
+**Release Date:** 25 June 2025
+
+**🆕 New Features:**
+- Added AI chatbot functionality with conversation memory
+- Implemented `!fckr ai_stats` command for AI usage statistics
+- Added `!fckr ai_memory` command to view conversation history
+- AI responds to @FCKR mentions with context-aware conversations
+- Rate limiting system (25 messages per hour per user)
+- Persistent conversation storage and session management
+
+**🔧 Technical Changes:**
+- Converted slash commands to !fckr prefix commands for consistency
+- Added SessionManager for user conversation tracking
+- Implemented AI statistics tracking (messages, commands, active users)
+- Added ephemeral messaging for AI command responses
+- Enhanced help system with AI command documentation
+
+</details>
+
+<details>
+<summary><strong>Version 1.1.1</strong> - 🐱 Welcome Message Improvements & Bug Fixes</summary>
 
 **Release Date:** 19 June 2025
 
