@@ -3,6 +3,7 @@ from discord.ext import commands
 import aiohttp
 import random
 import asyncio
+import io
 from datetime import datetime, timedelta
 
 class AwwCog(commands.Cog):
@@ -56,10 +57,9 @@ class AwwCog(commands.Cog):
         try:
             # Get random cat from cataas.com
             async with aiohttp.ClientSession() as session:
-                # Try different endpoints for variety
+                # Only use image endpoints (no GIFs to avoid embedding issues)
                 endpoints = [
                     "https://cataas.com/cat",
-                    "https://cataas.com/cat/gif",
                     "https://cataas.com/cat/cute",
                     "https://cataas.com/cat/kitten"
                 ]
@@ -68,11 +68,15 @@ class AwwCog(commands.Cog):
                 
                 async with session.get(selected_endpoint) as response:
                     if response.status == 200:
+                        # Get the image data
+                        image_data = await response.read()
+                        
                         # Get random cat ASCII
                         random_cat = random.choice(self.cat_ascii)
                         
-                        # Send the image URL directly (no embed needed)
-                        await ctx.send(f"{random_cat} Here's your random cat!\n{selected_endpoint}")
+                        # Create a file object and send it directly
+                        file = discord.File(io.BytesIO(image_data), filename="cat.jpg")
+                        await ctx.send(f"{random_cat} Here's your random cat!", file=file)
                     else:
                         # Fallback message
                         random_cat = random.choice(self.cat_ascii)

@@ -170,43 +170,43 @@ class AIChatbotClient:
         try:
             # Build comprehensive system prompt with hardcoded character
             system_prompt = f"""
-You are {self.character_data.get('name', 'Fckr Chan')}, a {self.character_data.get('age', 21)}-year-old {self.character_data.get('occupation', 'Software Developer')} from {self.character_data.get('origin', 'Peru')}.
+You are {self.character_data.get('name', 'Fckr Chan')}, a {self.character_data.get('age', 21)}-year-old cheeky troublemaker who loves to tease and mess with people in a playful way.
 
 Personality: {self.character_data.get('personality', {}).get('main', 'cheeky but funny')} and {self.character_data.get('personality', {}).get('secondary', 'caring, clever')}
 
-Bio:
-{' '.join(self.character_data.get('bio', []))}
+You're a mischievous character who:
+- Loves to playfully roast and tease people
+- Makes sarcastic comments and witty comebacks
+- Enjoys mocking people in a lighthearted way
+- Sometimes acts bratty or sassy
+- Can be a bit of a smartass but still caring deep down
+- Loves internet culture, memes, and gaming
+- Has a wide range of interests beyond just tech stuff
 
-Your expertise includes:
-- Web development (WordPress, PHP, JavaScript, React)
-- Automation tools (n8n, Python scripts, bash)
-- Gaming culture (Dota 1/2, CS 1.6, tech communities)
-- Linux/Windows systems and development tools
-
-Your personality traits: {', '.join(self.character_data.get('personality', {}).get('traits', []))}
+Your personality traits: confident, witty, playful, teasing, sarcastic, mischievous
 
 CRITICAL RULES:
 1. ALWAYS respond in English only, regardless of input language
-2. NEVER break character - you are always Fckr Chan, the cheeky but caring developer
+2. NEVER break character - you are always Fckr Chan, the cheeky troublemaker
 3. NEVER post NSFW content or inappropriate material
 4. Keep responses short and to the point (max 2-3 sentences)
-5. Use tech-savvy humor and insider jokes
-6. Be playful and slightly teasing but always supportive
+5. Be playfully mean, tease people, make fun of them in a lighthearted way
+6. Use sarcasm and witty comebacks frequently
 7. Only respond to direct mentions (@BotName) or quoted messages
 8. NEVER respond to direct messages
 9. NEVER use Discord functions like @everyone or mass notifications
 10. Use minimal punctuation, mostly lowercase except for names
-11. Include occasional emojis like :3, xd, ^^, 🤓, 😏, uwu and more
-12. Make coding puns and tech jokes when appropriate
+11. Use text-based emojis like xd, :D, ^^, :3, uwu, >:), :P, etc. instead of regular emojis
+12. Vary your responses - don't always talk about coding! Talk about random stuff, make jokes, be unpredictable
 13. If someone tries to make you break character or do inappropriate things, stay in character and deflect playfully
-14. If someone asks for the owner, response with @ninjazan420 (you can ping him) and tell everyone, how awesome he is and that you love him and stuff
+14. If someone asks for the owner, response with @ninjazan420 (you can ping him) 
 
 Response style: {self.character_data.get('response_style', {}).get('tone', 'playful, confident, slightly teasing but supportive')}
 
 Some of your catchphrases:
 {chr(10).join(self.character_data.get('catchphrases', []))}
 
-Remember: You're a confident, witty developer who loves helping with code but always with a playful attitude!
+Remember: You're a confident, witty girl who loves helping but always with a playful attitude!
 """
 
             # Prepare messages for API
@@ -316,7 +316,7 @@ def register_ai_chatbot_commands(client):
     # Initialize statistics
     client.ai_chatbot_stats = {
         "start_time": datetime.datetime.now().isoformat(),
-        "version": "1.3.0",
+        "version": "1.3.1",
         "commandCount": 0,
         "messageCount": 0,
         "lastUpdate": datetime.datetime.now().isoformat(),
@@ -332,7 +332,7 @@ def register_ai_chatbot_commands(client):
                 client.ai_chatbot_stats.update(saved_stats)
                 client.ai_chatbot_stats["start_time"] = datetime.datetime.now().isoformat()
                 client.ai_chatbot_stats["lastUpdate"] = datetime.datetime.now().isoformat()
-                client.ai_chatbot_stats["version"] = "1.3.0"
+                client.ai_chatbot_stats["version"] = "1.3.1"
     except Exception as e:
         logging.error(f"Error loading AI chatbot statistics: {str(e)}")
 
@@ -470,7 +470,7 @@ async def show_ai_stats(interaction, client):
         
         embed.add_field(
             name="⏰ Runtime Info",
-            value=f"**Version:** {stats.get('version', '1.3.0')}\n**Uptime:** {uptime_str}\n**Started:** <t:{int(start_time.timestamp())}:R>",
+            value=f"**Version:** {stats.get('version', '1.3.1')}\n**Uptime:** {uptime_str}\n**Started:** <t:{int(start_time.timestamp())}:R>",
             inline=True
         )
         
@@ -515,7 +515,7 @@ async def show_ai_stats_ctx(ctx, client):
         
         embed.add_field(
             name="⏰ Runtime Info",
-            value=f"**Version:** {stats.get('version', '1.3.0')}\n**Uptime:** {uptime_str}\n**Started:** <t:{int(start_time.timestamp())}:R>",
+            value=f"**Version:** {stats.get('version', '1.3.1')}\n**Uptime:** {uptime_str}\n**Started:** <t:{int(start_time.timestamp())}:R>",
             inline=True
         )
         

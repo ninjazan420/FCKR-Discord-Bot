@@ -8,8 +8,29 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
-            "1.3.0": {
+            "1.3.1": {
                 "date": "26 June 2025",
+                "title": "🤖 AI Chatbot Character & Aww Command Improvements",
+                "features": [
+                    "Redesigned AI chatbot personality - now more cheeky, teasing, and playful",
+                    "Removed coding-focused responses for more varied, unpredictable conversations",
+                    "Updated emoji system to use text-based emojis (xd, :3, ^^, uwu, >:), :P)",
+                    "Enhanced aww command to post direct images instead of URLs",
+                    "Removed GIF support from aww command to prevent embedding issues"
+                ],
+                "fixes": [
+                    "Fixed aww command image embedding by downloading and posting files directly",
+                    "Improved AI chatbot response variety and personality consistency"
+                ],
+                "technical": [
+                    "Modified AI system prompt to focus on playful teasing over technical expertise",
+                    "Updated aww.py to use discord.File for direct image posting",
+                    "Removed GIF endpoints from cataas.com integration",
+                    "Enhanced character personality with sarcastic and witty response patterns"
+                ]
+            },
+            "1.3.0": {
+                "date": "25 June 2025",
                 "title": "🤖 AI Chatbot with Memory & Statistics",
                 "features": [
                     "Added interactive AI chatbot with personality (Fckr Chan) - playfully dominant and teasing character",

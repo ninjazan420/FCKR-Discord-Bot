@@ -1,4 +1,4 @@
-# FCKR-Discord-Bot 1.3.0
+# FCKR-Discord-Bot 1.3.1
 
 ```
 ▄████  ▄█▄    █  █▀ █▄▄▄▄ 
@@ -14,7 +14,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 
 ## 📋 Table of Contents
 
-- [FCKR-Discord-Bot 1.3.0](#fckr-discord-bot-130)
+- [FCKR-Discord-Bot 1.3.1](#fckr-discord-bot-131)
   - [📋 Table of Contents](#-table-of-contents)
   - [✨ Features](#-features)
   - [🚀 Quick Start](#-quick-start)
