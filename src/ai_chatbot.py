@@ -313,10 +313,10 @@ def register_ai_chatbot_commands(client):
     client.ai_chatbot_client = AIChatbotClient(os.environ.get('OPENROUTER_KEY'))
     client.message_history = {}
 
-    # Initialize statistics
+    # Initialize statistics with default values
     client.ai_chatbot_stats = {
         "start_time": datetime.datetime.now().isoformat(),
-        "version": "1.3.1",
+        "version": "1.3.2",
         "commandCount": 0,
         "messageCount": 0,
         "lastUpdate": datetime.datetime.now().isoformat(),
@@ -329,12 +329,19 @@ def register_ai_chatbot_commands(client):
         if os.path.exists(STATS_PATH):
             with open(STATS_PATH, 'r', encoding='utf-8') as f:
                 saved_stats = json.load(f)
-                client.ai_chatbot_stats.update(saved_stats)
-                client.ai_chatbot_stats["start_time"] = datetime.datetime.now().isoformat()
+                # Preserve important counters but update metadata
+                if isinstance(saved_stats, dict):
+                    client.ai_chatbot_stats["commandCount"] = saved_stats.get("commandCount", 0)
+                    client.ai_chatbot_stats["messageCount"] = saved_stats.get("messageCount", 0)
+                    # Keep original start time if it exists
+                    if "start_time" in saved_stats:
+                        client.ai_chatbot_stats["start_time"] = saved_stats["start_time"]
+                # Always update these on startup
                 client.ai_chatbot_stats["lastUpdate"] = datetime.datetime.now().isoformat()
-                client.ai_chatbot_stats["version"] = "1.3.1"
+                client.ai_chatbot_stats["version"] = "1.3.2"
+                logging.info(f"Loaded AI chatbot statistics - Messages: {client.ai_chatbot_stats['messageCount']}, Commands: {client.ai_chatbot_stats['commandCount']}")
     except Exception as e:
-        logging.error(f"Error loading AI chatbot statistics: {str(e)}")
+        logging.error(f"Error loading AI chatbot statistics: {str(e)} - Using default values")
 
     # Load existing user sessions if available
     client.session_manager.load_sessions()
@@ -353,15 +360,37 @@ def register_ai_chatbot_commands(client):
 # Main function to handle AI chatbot messages
 async def handle_ai_chatbot_message(client, message):
     """
-    Processes AI chatbot related messages (mentions and quotes only).
+    Processes AI chatbot related messages (mentions, quotes, and admin replies).
     This function is called from the on_message event handler in main.py.
     """
     # Check if bot was mentioned (but ignore DMs completely)
     mentioned = client.user in message.mentions
     is_dm = isinstance(message.channel, discord.DMChannel)
     
-    # CRITICAL: Only respond to mentions, NEVER to DMs
-    if not mentioned or is_dm:
+    # Check if this is a reply to the bot
+    is_reply_to_bot = False
+    if message.reference and message.reference.message_id:
+        try:
+            referenced_message = await message.channel.fetch_message(message.reference.message_id)
+            is_reply_to_bot = referenced_message.author == client.user
+        except:
+            is_reply_to_bot = False
+    
+    # Check if user is admin (you can customize this list)
+    admin_ids = [int(os.getenv('ADMIN_USER_ID', 0))]  # Add more admin IDs as needed
+    is_admin = message.author.id in admin_ids
+    
+    # CRITICAL: Only respond to mentions or replies to bot (NEVER to DMs or random messages)
+    if is_dm:
+        return False
+    
+    # Check if message is in allowed AI channel
+    allowed_ai_channel = int(os.getenv('AI_CHANNEL_ID', 1371926833511006218))
+    if message.channel.id != allowed_ai_channel:
+        return False
+    
+    # Respond ONLY if: mentioned or reply to bot (even for admins)
+    if not (mentioned or is_reply_to_bot):
         return False
 
     # Rate limit check
@@ -398,14 +427,35 @@ async def handle_ai_chatbot_message(client, message):
             "guild_name": message.guild.name if message.guild else "DM",
             "channel_name": message.channel.name if hasattr(message.channel, 'name') else "Direct Message"
         }
+        
+        # Add context about mentioned users
+        mentioned_users_context = ""
+        if message.mentions:
+            mentioned_users_info = []
+            for mentioned_user in message.mentions:
+                if mentioned_user != client.user:  # Don't include the bot itself
+                    user_info = f"{mentioned_user.display_name} (ID: {mentioned_user.id})"
+                    # Add user stats if available
+                    user_stats = client.session_manager.get_user_stats(mentioned_user.id)
+                    if user_stats["total_messages"] > 0:
+                        user_info += f" - has chatted with me {user_stats['total_messages']} times"
+                    else:
+                        user_info += " - hasn't chatted with me yet"
+                    mentioned_users_info.append(user_info)
+            
+            if mentioned_users_info:
+                mentioned_users_context = f"\n\nMentioned users in this message: {', '.join(mentioned_users_info)}"
+        
+        # Enhanced prompt with user context
+        enhanced_prompt = prompt + mentioned_users_context
 
         # Get previous conversation data
         chat_history = client.session_manager.get_user_context(message.author.id)
 
-        # Generate response with conversation history
-        response = await client.ai_chatbot_client.generate_response(prompt, context, chat_history)
+        # Generate response with conversation history and enhanced context
+        response = await client.ai_chatbot_client.generate_response(enhanced_prompt, context, chat_history)
 
-        # Store interaction in session manager
+        # Store interaction in session manager (use original prompt for storage)
         client.session_manager.add_interaction(message.author.id, prompt, response)
 
         # Update statistics
@@ -425,24 +475,63 @@ def update_ai_chatbot_stats(client, event_type=None):
         client.ai_chatbot_stats["commandCount"] += 1
     elif event_type == "message":
         client.ai_chatbot_stats["messageCount"] += 1
+    
+    # Update last update timestamp
+    client.ai_chatbot_stats["lastUpdate"] = datetime.datetime.now().isoformat()
+    
+    # Update user counts
+    client.ai_chatbot_stats["total_users"] = len(client.session_manager.user_sessions)
+    client.ai_chatbot_stats["active_sessions"] = sum(1 for sessions in client.session_manager.user_sessions.values() if len(sessions) > 0)
 
-    # Save statistics every 10 updates
-    if (client.ai_chatbot_stats["commandCount"] + client.ai_chatbot_stats["messageCount"]) % 10 == 0:
+    # Save statistics every 5 updates (more frequent saves)
+    if (client.ai_chatbot_stats["commandCount"] + client.ai_chatbot_stats["messageCount"]) % 5 == 0:
         save_ai_chatbot_stats(client)
 
 # Function to save statistics
 def save_ai_chatbot_stats(client):
     try:
+        # Ensure stats dictionary has all required fields
+        if not hasattr(client, 'ai_chatbot_stats'):
+            client.ai_chatbot_stats = {
+                "start_time": datetime.datetime.now().isoformat(),
+                "version": "1.3.2",
+                "commandCount": 0,
+                "messageCount": 0,
+                "lastUpdate": datetime.datetime.now().isoformat(),
+                "total_users": 0,
+                "active_sessions": 0
+            }
+        
+        # Update dynamic fields
         client.ai_chatbot_stats["lastUpdate"] = datetime.datetime.now().isoformat()
         client.ai_chatbot_stats["total_users"] = len(client.session_manager.user_sessions)
         client.ai_chatbot_stats["active_sessions"] = sum(1 for sessions in client.session_manager.user_sessions.values() if len(sessions) > 0)
         
-        with open(STATS_PATH, 'w', encoding='utf-8') as f:
+        # Ensure logs directory exists
+        os.makedirs(LOGS_DIR, exist_ok=True)
+        
+        # Save to file with backup
+        temp_path = STATS_PATH + '.tmp'
+        with open(temp_path, 'w', encoding='utf-8') as f:
             json.dump(client.ai_chatbot_stats, f, ensure_ascii=False, indent=2)
         
-        logging.info("AI Chatbot statistics saved")
+        # Atomic move to prevent corruption
+        if os.path.exists(temp_path):
+            if os.path.exists(STATS_PATH):
+                os.replace(temp_path, STATS_PATH)
+            else:
+                os.rename(temp_path, STATS_PATH)
+        
+        logging.info(f"AI Chatbot statistics saved - Messages: {client.ai_chatbot_stats['messageCount']}, Commands: {client.ai_chatbot_stats['commandCount']}, Users: {client.ai_chatbot_stats['total_users']}")
     except Exception as e:
         logging.error(f"Error saving AI Chatbot statistics: {str(e)}")
+        # Try to clean up temp file
+        try:
+            temp_path = STATS_PATH + '.tmp'
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+        except:
+            pass
 
 # Function to display AI statistics
 async def show_ai_stats(interaction, client):
@@ -470,7 +559,7 @@ async def show_ai_stats(interaction, client):
         
         embed.add_field(
             name="⏰ Runtime Info",
-            value=f"**Version:** {stats.get('version', '1.3.1')}\n**Uptime:** {uptime_str}\n**Started:** <t:{int(start_time.timestamp())}:R>",
+            value=f"**Version:** {stats.get('version', '1.3.2')}\n**Uptime:** {uptime_str}\n**Started:** <t:{int(start_time.timestamp())}:R>",
             inline=True
         )
         
@@ -515,7 +604,7 @@ async def show_ai_stats_ctx(ctx, client):
         
         embed.add_field(
             name="⏰ Runtime Info",
-            value=f"**Version:** {stats.get('version', '1.3.1')}\n**Uptime:** {uptime_str}\n**Started:** <t:{int(start_time.timestamp())}:R>",
+            value=f"**Version:** {stats.get('version', '1.3.2')}\n**Uptime:** {uptime_str}\n**Started:** <t:{int(start_time.timestamp())}:R>",
             inline=True
         )
         

@@ -8,6 +8,27 @@ class ChangelogCog(commands.Cog):
         
         # Changelog data - format: version: {date, features, fixes, notes}
         self.changelog_data = {
+            "1.3.2": {
+                "date": "2025-06-26",
+                "title": "🔧 Admin Mode Fix & Bot Response Optimization",
+                "features": [
+                    "Fixed admin mode to only respond to mentions and replies (not all messages)",
+                    "Improved bot response logic for better user experience",
+                    "Enhanced message handling to prevent spam responses",
+                    "Added AI channel restriction - bot only responds in designated AI channel"
+                ],
+                "fixes": [
+                    "Admin users no longer trigger bot responses on every message",
+                    "Bot now only responds to @mentions or direct replies",
+                    "Improved rate limiting and response filtering"
+                ],
+                "technical": [
+                    "Updated handle_ai_chatbot_message function logic",
+                    "Refined admin privilege handling",
+                    "Added AI_CHANNEL_ID environment variable for channel restriction",
+                    "Version bump to 1.3.2 across all components"
+                ]
+            },
             "1.3.1": {
                 "date": "26 June 2025",
                 "title": "🤖 AI Chatbot Character & Aww Command Improvements",

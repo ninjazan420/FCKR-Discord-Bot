@@ -41,7 +41,7 @@ async def on_message(message):
 async def on_ready():
     # Startup logging with timestamp and version
     timestamp = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    version = "1.3.1"
+    version = "1.3.2"
     
     # ASCII Art for console
     ascii_art = """

@@ -1,4 +1,4 @@
-# FCKR-Discord-Bot 1.3.1
+# FCKR-Discord-Bot 1.3.2
 
 ```
 ▄████  ▄█▄    █  █▀ █▄▄▄▄ 
@@ -14,7 +14,7 @@ A modular Discord bot for the FCKR Tag & Community server that provides automate
 
 ## 📋 Table of Contents
 
-- [FCKR-Discord-Bot 1.3.1](#fckr-discord-bot-131)
+- [FCKR-Discord-Bot 1.3.2](#fckr-discord-bot-132)
   - [📋 Table of Contents](#-table-of-contents)
   - [✨ Features](#-features)
   - [🚀 Quick Start](#-quick-start)
@@ -167,13 +167,60 @@ FCKR-Discord-Bot/
 | `ROLES_CHANNEL_ID` | Channel ID for color role selection | ✅ |
 | `COUNTING_CHANNEL_ID` | Channel ID for counting game | ✅ |
 | `JOIN_LOG_CHANNEL` | Channel ID for welcome messages | ✅ |
+| `AI_CHANNEL_ID` | Channel ID where AI chatbot responds | ✅ |
 
 ## 📈 Version History
 
 <details open>
-<summary><strong>Version 1.3.0</strong> (Current) - 🤖 AI Chatbot Integration</summary>
+<summary><strong>Version 1.3.2</strong> (Current) - 🔧 Admin Mode Fix & Bot Response Optimization</summary>
 
-**Release Date:** 25 June 2025
+**Release Date:** 19 December 2024
+
+**🆕 New Features:**
+- Fixed admin mode to only respond to mentions and replies (not all messages)
+- Improved bot response logic for better user experience
+- Enhanced message handling to prevent spam responses
+- Added AI channel restriction - bot only responds in designated AI channel
+
+**🐛 Bug Fixes:**
+- Admin users no longer trigger bot responses on every message
+- Bot now only responds to @mentions or direct replies
+- Improved rate limiting and response filtering
+
+**🔧 Technical Changes:**
+- Updated handle_ai_chatbot_message function logic
+- Refined admin privilege handling
+- Added AI_CHANNEL_ID environment variable for channel restriction
+- Version bump to 1.3.2 across all components
+
+</details>
+
+<details>
+<summary><strong>Version 1.3.1</strong> - 🤖 AI Chatbot Integration</summary>
+
+**Release Date:** 26 June 2024
+
+**🆕 New Features:**
+- Added AI chatbot functionality with conversation memory
+- Implemented `!fckr ai_stats` command for AI usage statistics
+- Added `!fckr ai_memory` command to view conversation history
+- AI responds to @FCKR mentions with context-aware conversations
+- Rate limiting system (25 messages per hour per user)
+- Persistent conversation storage and session management
+
+**🔧 Technical Changes:**
+- Converted slash commands to !fckr prefix commands for consistency
+- Added SessionManager for user conversation tracking
+- Implemented AI statistics tracking (messages, commands, active users)
+- Added ephemeral messaging for AI command responses
+- Enhanced help system with AI command documentation
+
+</details>
+
+<details>
+<summary><strong>Version 1.3.0</strong> - 🤖 AI Chatbot Integration</summary>
+
+**Release Date:** 16 June 2025
 
 **🆕 New Features:**
 - Added AI chatbot functionality with conversation memory
@@ -195,7 +242,7 @@ FCKR-Discord-Bot/
 <details>
 <summary><strong>Version 1.1.1</strong> - 🐱 Welcome Message Improvements & Bug Fixes</summary>
 
-**Release Date:** 19 June 2025
+**Release Date:** 15 June 2025
 
 **🆕 New Features:**
 - Added multiple random ASCII cat images to welcome messages for variety
@@ -218,7 +265,7 @@ FCKR-Discord-Bot/
 <details>
 <summary><strong>Version 1.1.0</strong> - 🐾 Welcome Cats & API Integration</summary>
 
-**Release Date:** 19 June 2025
+**Release Date:** 15 May 2025
 
 **🆕 New Features:**
 - Added an automatic welcome message for new members with a cute cat GIF from cataas API
@@ -236,7 +283,7 @@ FCKR-Discord-Bot/
 <details>
 <summary><strong>Version 1.0.9</strong> - ⚙️ Self-Check & Stability Enhancements</summary>
 
-**Release Date:** 18 June 2025
+**Release Date:** 14 May 2025
 
 **🆕 New Features:**
 - Added a self-check system that runs every 5 minutes to ensure cogs are initialized
